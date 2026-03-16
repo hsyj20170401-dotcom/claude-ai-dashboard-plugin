@@ -1,0 +1,22 @@
+{
+  "name": "ike-ai-dashboard-marketplace",
+  "owner": {
+    "name": "Ike"
+  },
+  "metadata": {
+    "description": "Marketplace for ai-dashboard-local plugin"
+  },
+  "plugins": [
+    {
+      "name": "ai-dashboard-local",
+      "description": "Cross-platform local AI dashboard workflow plugin",
+      "version": "0.1.0",
+      "author": {
+        "name": "Ike"
+      },
+      "source": "./plugins/ai-dashboard-local",
+      "category": "productivity",
+      "strict": false
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "name": "ai-dashboard-local",
+  "version": "0.1.0",
+  "description": "Cross-platform local AI dashboard workflow plugin (start/refresh/scan/stop)",
+  "author": {
+    "name": "Ike"
+  },
+  "license": "MIT",
+  "keywords": [
+    "claude-code",
+    "dashboard",
+    "local-files",
+    "workflow",
+    "productivity"
+  ]
+}

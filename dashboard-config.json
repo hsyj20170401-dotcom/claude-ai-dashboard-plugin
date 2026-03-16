@@ -1,0 +1,44 @@
+{
+  "namespace": "my-dashboard-instance",
+  "homeDir": "",
+  "roots": [
+    "$HOME/Desktop/cmd",
+    "$HOME/Documents",
+    "$HOME/Downloads"
+  ],
+  "icons": [
+    {
+      "label": "Example Project",
+      "category": "Work",
+      "icon": "🌐",
+      "bg": "bg-blue",
+      "path": "$HOME/Desktop/cmd/example-project.html"
+    }
+  ],
+  "dock": [
+    {
+      "label": "Desktop",
+      "title": "Desktop",
+      "icon": "🖥️",
+      "bg": "bg-blue",
+      "path": "$HOME/Desktop/"
+    },
+    {
+      "label": "Documents",
+      "title": "Documents",
+      "icon": "📁",
+      "bg": "bg-amber",
+      "path": "$HOME/Documents/"
+    },
+    {
+      "type": "separator"
+    },
+    {
+      "label": "Downloads",
+      "title": "Downloads",
+      "icon": "⬇️",
+      "bg": "bg-orange",
+      "path": "$HOME/Downloads/"
+    }
+  ]
+}

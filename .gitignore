@@ -1,0 +1,9 @@
+.DS_Store
+scripts/__pycache__/
+*.pyc
+
+# Local/private runtime config (contains user paths)
+dashboard-config.local.json
+
+# Local logs
+*.log

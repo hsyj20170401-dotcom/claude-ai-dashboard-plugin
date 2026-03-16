@@ -1,0 +1,2134 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Desktop</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--dock-h:74px;--menubar-h:48px;--extbar-h:34px}
+body{
+  font-family:'Noto Sans KR','Inter',system-ui,sans-serif;
+  margin:0;overflow:hidden;height:100vh;width:100vw;
+  user-select:none;-webkit-user-select:none;
+  background:linear-gradient(135deg,#0f0c29 0%,#302b63 50%,#24243e 100%);
+}
+body.wp-aurora{background:linear-gradient(135deg,#0a192f 0%,#112240 25%,#1a365d 50%,#065666 75%,#0d9488 100%)}
+body.wp-sunset{background:linear-gradient(180deg,#1a0533 0%,#4a1942 20%,#c2185b 50%,#ff6f00 75%,#ffc107 100%)}
+body.wp-ocean{background:linear-gradient(180deg,#000428 0%,#004e92 100%)}
+body.wp-forest{background:linear-gradient(135deg,#0a1a0a 0%,#1b4332 40%,#2d6a4f 70%,#52b788 100%)}
+body.wp-light{background:#f5f5f7;color:#1d1d1f}
+body.wp-light .menubar{background:rgba(255,255,255,.72);border-bottom:1px solid rgba(0,0,0,.08)}
+body.wp-light .mb-logo,body.wp-light .mb-item,body.wp-light .mb-right{color:rgba(0,0,0,.8)}
+body.wp-light .mb-item:hover{background:rgba(0,0,0,.06)}
+body.wp-light .di-lbl{color:#1d1d1f;text-shadow:none}
+body.wp-light .dock{background:rgba(255,255,255,.55);border-color:rgba(0,0,0,.08)}
+body.wp-light .ctx,body.wp-light .icon-ctx{background:rgba(255,255,255,.92);border-color:rgba(0,0,0,.1);box-shadow:0 10px 30px rgba(0,0,0,.12)}
+body.wp-light .ctx-i,body.wp-light .icon-ctx-i{color:rgba(0,0,0,.7)}
+body.wp-light .ctx-i:hover{background:rgba(59,130,246,.12)}
+body.wp-light .mb-sizer span{color:rgba(0,0,0,.4)}
+body.wp-light .mb-sizer input[type=range]{background:rgba(0,0,0,.12)}
+body.wp-light .mb-sizer input[type=range]::-webkit-slider-thumb{background:#333;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+body.wp-light .mb-sizer{border-left-color:rgba(0,0,0,.1)}
+body.wp-light .dock{box-shadow:0 4px 20px rgba(0,0,0,.08)}
+body.wp-light .dk-badge{background:rgba(0,0,0,.7)}
+body.wp-light .extbar{background:rgba(255,255,255,.72);border-bottom:1px solid rgba(0,0,0,.08)}
+body.wp-light .extf{color:rgba(0,0,0,.72);border-color:rgba(0,0,0,.18);background:rgba(0,0,0,.03)}
+body.wp-light .extf:hover{background:rgba(0,0,0,.07)}
+body.wp-light .extf.on{background:rgba(0,0,0,.16);border-color:rgba(0,0,0,.28);color:#111}
+body.wp-light .folder-win,body.wp-light .trash-win{background:rgba(255,255,255,.92);border-color:rgba(0,0,0,.1);box-shadow:0 16px 50px rgba(0,0,0,.12)}
+body.wp-light .folder-win-bar,body.wp-light .trash-win-bar{border-bottom-color:rgba(0,0,0,.06)}
+body.wp-light .folder-win-title,body.wp-light .trash-win-title{color:#1d1d1f}
+body.wp-light .folder-win-title input{color:#1d1d1f}
+body.wp-light .folder-win-hint{color:rgba(0,0,0,.3);border-top-color:rgba(0,0,0,.06)}
+body.wp-light .folder-win-empty,body.wp-light .trash-win-empty{color:rgba(0,0,0,.3)}
+body.wp-light .folder-item-btn{background:rgba(0,0,0,.06);color:rgba(0,0,0,.6)}
+body.wp-light .folder-item-btn:hover{background:rgba(0,0,0,.1)}
+body.wp-light .folder-item-btn.del{background:rgba(239,68,68,.08);color:#dc2626}
+body.wp-light .wpp{background:rgba(255,255,255,.92);border-color:rgba(0,0,0,.1);box-shadow:0 8px 30px rgba(0,0,0,.1)}
+body.wp-light .wpp-t{color:rgba(0,0,0,.35)}
+body.wp-light .wps::after{color:rgba(0,0,0,.35)}
+body.wp-light .wps.on{border-color:#333;box-shadow:0 0 10px rgba(0,0,0,.15)}
+body.wp-light #clk{color:rgba(0,0,0,.6)}
+body.wp-rose{background:linear-gradient(135deg,#2d1b2e 0%,#4a2040 30%,#6b2fa0 60%,#d946ef 100%)}
+body.wp-midnight{background:linear-gradient(180deg,#020617 0%,#0f172a 50%,#1e293b 100%)}
+body.wp-warmgray{background:#3a3a3c;color:#f5f5f7}
+body.wp-warmgray .menubar{background:rgba(58,58,60,.8);border-bottom:1px solid rgba(255,255,255,.06)}
+body.wp-peach{background:linear-gradient(135deg,#1a1520 0%,#44233f 30%,#b0413e 60%,#f4845f 85%,#ffd6a5 100%)}
+body.wp-nordic{background:linear-gradient(180deg,#1a1b2e 0%,#2e3047 30%,#4a5568 60%,#a0aec0 100%)}
+
+/* Boot */
+.boot{position:fixed;inset:0;z-index:9999;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .8s}
+.boot.hide{opacity:0;pointer-events:none}
+.boot-logo{width:72px;height:72px;border-radius:18px;background:linear-gradient(135deg,#7c3aed,#3b82f6);display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:900;color:#fff;font-family:Inter;margin-bottom:24px;animation:pulse 1.5s ease-in-out infinite}
+@keyframes pulse{0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(124,58,237,.4)}50%{transform:scale(1.05);box-shadow:0 0 30px 8px rgba(124,58,237,.2)}}
+.boot-bar{width:180px;height:4px;border-radius:4px;background:rgba(255,255,255,.08);overflow:hidden}
+.boot-bar-fill{width:0;height:100%;border-radius:4px;background:linear-gradient(90deg,#7c3aed,#3b82f6);animation:load 1.8s ease-out forwards}
+@keyframes load{to{width:100%}}
+.boot-txt{color:rgba(255,255,255,.25);font-size:.65rem;margin-top:12px;font-family:Inter;letter-spacing:.1em}
+
+/* Menu Bar */
+.menubar{position:fixed;top:0;left:0;right:0;height:var(--menubar-h);background:rgba(0,0,0,.35);backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);display:flex;align-items:center;justify-content:space-between;padding:0 20px;z-index:200;border-bottom:1px solid rgba(255,255,255,.06)}
+.mb-left{display:flex;align-items:center;gap:20px}
+.mb-logo{font-size:1rem;font-weight:800;color:#fff;display:flex;align-items:center;gap:8px}
+.mb-logo i{background:linear-gradient(135deg,#7c3aed,#3b82f6);width:22px;height:22px;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;font-size:.65rem;color:#fff;font-style:normal}
+.mb-item{color:rgba(255,255,255,.7);font-size:.9rem;font-weight:500;cursor:pointer;padding:6px 10px;border-radius:6px;transition:background .15s;display:flex;align-items:center;gap:5px}
+.mb-item:hover{background:rgba(255,255,255,.1)}
+.mb-right{display:flex;align-items:center;gap:14px;color:rgba(255,255,255,.65);font-size:.9rem;font-family:Inter}
+.mb-icon{cursor:pointer;padding:4px 6px;border-radius:6px;transition:background .15s;font-size:1rem}
+.mb-icon:hover{background:rgba(255,255,255,.1)}
+.mb-sizer{display:flex;align-items:center;gap:8px;padding:0 10px;border-left:1px solid rgba(255,255,255,.08)}
+.mb-sizer span{font-size:.7rem;color:rgba(255,255,255,.4);user-select:none}
+.mb-sizer input[type=range]{-webkit-appearance:none;appearance:none;width:90px;height:5px;background:rgba(255,255,255,.15);border-radius:3px;outline:none;cursor:pointer}
+.mb-sizer input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:14px;height:14px;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.3);cursor:pointer;transition:transform .1s}
+.mb-sizer input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.3)}
+.mb-sizer input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.3);cursor:pointer;border:none}
+.extbar{position:fixed;top:var(--menubar-h);left:0;right:0;height:var(--extbar-h);z-index:199;display:flex;align-items:center;padding:0 20px;background:rgba(0,0,0,.2);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.06)}
+.extfilters{display:flex;align-items:center;gap:6px;overflow-x:auto;white-space:nowrap;max-width:100%}
+.extfilters::-webkit-scrollbar{height:0}
+.extf{font-size:.68rem;color:rgba(255,255,255,.72);padding:4px 9px;border-radius:999px;border:1px solid rgba(255,255,255,.14);cursor:pointer;transition:all .15s;background:rgba(255,255,255,.04)}
+.extf:hover{background:rgba(255,255,255,.12)}
+.extf.on{background:rgba(59,130,246,.34);border-color:rgba(59,130,246,.5);color:#fff}
+
+/* Desktop */
+.desktop{position:fixed;top:calc(var(--menubar-h) + var(--extbar-h));left:0;right:0;bottom:var(--dock-h);overflow:hidden}
+
+/* Icon */
+.di{display:flex;flex-direction:column;align-items:center;width:76px;cursor:grab;text-decoration:none;color:#fff;transition:transform .15s,box-shadow .15s;position:absolute;padding:4px 0;z-index:1}
+.di:hover{transform:scale(1.08);z-index:2}
+.di.dragging{cursor:grabbing;transform:scale(1.15);z-index:100;opacity:.85;filter:brightness(1.2)}
+.di-img{width:52px;height:52px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin-bottom:3px;position:relative;box-shadow:0 4px 12px rgba(0,0,0,.2)}
+.di:hover .di-img{box-shadow:0 6px 20px rgba(0,0,0,.35)}
+.di-lbl{font-size:.58rem;font-weight:500;text-align:center;line-height:1.25;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.7);max-width:76px;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.di-badge{position:absolute;top:-4px;right:-4px;min-width:17px;height:17px;border-radius:9px;background:#ef4444;color:#fff;font-size:.5rem;font-weight:700;display:flex;align-items:center;justify-content:center;padding:0 4px;font-family:Inter;box-shadow:0 2px 6px rgba(239,68,68,.4)}
+.desk-sep{display:none}
+.di.ext-hidden{display:none!important}
+
+/* Colors */
+.bg-blue{background:linear-gradient(135deg,#3b82f6,#2563eb)}.bg-green{background:linear-gradient(135deg,#10b981,#059669)}.bg-amber{background:linear-gradient(135deg,#f59e0b,#d97706)}.bg-pink{background:linear-gradient(135deg,#f43f5e,#e11d48)}.bg-purple{background:linear-gradient(135deg,#8b5cf6,#7c3aed)}.bg-cyan{background:linear-gradient(135deg,#06b6d4,#0891b2)}.bg-orange{background:linear-gradient(135deg,#f97316,#ea580c)}.bg-emerald{background:linear-gradient(135deg,#34d399,#10b981)}.bg-gray{background:linear-gradient(135deg,#6b7280,#4b5563)}.bg-rose{background:linear-gradient(135deg,#fb7185,#f43f5e)}.bg-slate{background:linear-gradient(135deg,#475569,#334155)}.bg-sky{background:linear-gradient(135deg,#0ea5e9,#0284c7)}
+
+/* Dock */
+.dock-wrap{position:fixed;bottom:6px;left:50%;transform:translateX(-50%);z-index:200}
+.dock{display:flex;align-items:flex-end;gap:3px;padding:4px 10px;background:rgba(255,255,255,.08);backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);border:1px solid rgba(255,255,255,.1);border-radius:18px;box-shadow:0 8px 40px rgba(0,0,0,.3)}
+.dk{display:flex;flex-direction:column;align-items:center;cursor:pointer;text-decoration:none;transition:transform .15s;padding:3px}
+.dk:hover{transform:translateY(-8px) scale(1.2)}
+.dk-icon{width:44px;height:44px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;box-shadow:0 3px 10px rgba(0,0,0,.2)}
+.dk:hover .dk-icon{box-shadow:0 6px 20px rgba(0,0,0,.3)}
+.dk-dot{width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,.45);margin-top:3px}
+.dk-sep{width:1px;height:36px;background:rgba(255,255,255,.08);margin:0 5px;align-self:center}
+
+/* Spotlight */
+.spot-bg{position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.4);backdrop-filter:blur(6px);display:none;align-items:flex-start;justify-content:center;padding-top:18vh}
+.spot-bg.on{display:flex}
+.spot{width:540px;max-width:90vw;background:rgba(30,30,40,.88);backdrop-filter:blur(40px);border:1px solid rgba(255,255,255,.1);border-radius:14px;box-shadow:0 16px 50px rgba(0,0,0,.5);overflow:hidden}
+.spot-top{display:flex;align-items:center;padding:12px 16px;gap:8px;border-bottom:1px solid rgba(255,255,255,.06)}
+.spot-inp{flex:1;background:transparent;border:none;outline:none;color:#fff;font-size:.95rem;font-family:'Noto Sans KR',Inter}
+.spot-inp::placeholder{color:rgba(255,255,255,.3)}
+.spot-list{max-height:340px;overflow-y:auto;padding:4px 0}
+.spot-list::-webkit-scrollbar{width:3px}.spot-list::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:3px}
+.spot-r{display:flex;align-items:center;gap:10px;padding:9px 16px;cursor:pointer;transition:background .1s;text-decoration:none;color:#fff}
+.spot-r:hover,.spot-r.sel{background:rgba(59,130,246,.25)}
+.spot-r-icon{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0}
+.spot-r-name{font-size:.8rem;font-weight:500}
+.spot-r-cat{font-size:.58rem;color:rgba(255,255,255,.3);font-family:Inter}
+.spot-hint{padding:8px 16px;font-size:.58rem;color:rgba(255,255,255,.18);text-align:center;font-family:Inter}
+
+/* Mascot */
+.mascot{position:fixed;bottom:calc(var(--dock-h) + 12px);right:16px;z-index:150;cursor:pointer}
+.mascot:hover{transform:scale(1.1)}
+.mc-body{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#3b82f6);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(124,58,237,.3);animation:float 3s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+.mc-bub{position:absolute;bottom:52px;right:0;background:rgba(30,30,40,.92);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:10px 14px;width:200px;box-shadow:0 8px 24px rgba(0,0,0,.3);display:none;animation:bubIn .2s ease}
+.mc-bub.on{display:block}
+@keyframes bubIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.mc-bub::after{content:'';position:absolute;bottom:-5px;right:18px;width:10px;height:10px;background:rgba(30,30,40,.92);transform:rotate(45deg);border-right:1px solid rgba(255,255,255,.1);border-bottom:1px solid rgba(255,255,255,.1)}
+.mc-bub .tl{font-size:.5rem;font-weight:700;color:#7c3aed;text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px;font-family:Inter}
+.mc-bub p{font-size:.68rem;color:rgba(255,255,255,.75);line-height:1.55}
+
+/* Wallpaper Picker */
+.wpp{position:fixed;bottom:calc(var(--dock-h) + 12px);left:16px;z-index:150;background:rgba(30,30,40,.92);backdrop-filter:blur(30px);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:14px 14px 22px;box-shadow:0 8px 30px rgba(0,0,0,.4);display:none;min-width:240px}
+.wpp.on{display:block}
+.wpp-t{font-size:.55rem;font-weight:700;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px;font-family:Inter}
+.wpp-g{display:flex;gap:6px}
+.wpp-g{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.wps{width:38px;height:38px;border-radius:8px;cursor:pointer;border:2px solid transparent;transition:all .2s;position:relative}
+.wps:hover{transform:scale(1.1)}.wps.on{border-color:#fff;box-shadow:0 0 10px rgba(255,255,255,.3)}
+.wps::after{content:attr(data-label);position:absolute;bottom:-13px;left:50%;transform:translateX(-50%);font-size:.4rem;color:rgba(255,255,255,.35);white-space:nowrap;pointer-events:none}
+.wps-a{background:linear-gradient(135deg,#0f0c29,#302b63)}
+.wps-b{background:linear-gradient(135deg,#0a192f,#0d9488)}
+.wps-c{background:linear-gradient(135deg,#4a1942,#ff6f00)}
+.wps-d{background:linear-gradient(135deg,#000428,#004e92)}
+.wps-e{background:linear-gradient(135deg,#0a1a0a,#52b788)}
+.wps-f{background:#f5f5f7;border-color:rgba(0,0,0,.1)}
+.wps-g{background:linear-gradient(135deg,#2d1b2e,#d946ef)}
+.wps-h{background:linear-gradient(180deg,#020617,#1e293b)}
+.wps-i{background:#3a3a3c}
+.wps-j{background:linear-gradient(135deg,#44233f,#ffd6a5)}
+
+/* Context Menu */
+.ctx{position:fixed;z-index:600;background:rgba(30,30,40,.92);backdrop-filter:blur(30px);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:3px 0;min-width:160px;box-shadow:0 10px 30px rgba(0,0,0,.4);display:none}
+.ctx.on{display:block}
+.ctx-i{padding:6px 14px;font-size:.72rem;color:rgba(255,255,255,.75);cursor:pointer;transition:background .1s;display:flex;align-items:center;gap:6px}
+.ctx-i:hover{background:rgba(59,130,246,.3)}
+.ctx-s{height:1px;background:rgba(255,255,255,.06);margin:3px 0}
+
+/* Folder Icon */
+.di.folder .di-img{background:linear-gradient(135deg,#3b82f6,#1d4ed8);position:relative}
+.di.folder .di-img::before{content:'';position:absolute;top:-4px;left:4px;width:18px;height:8px;background:linear-gradient(135deg,#60a5fa,#3b82f6);border-radius:4px 4px 0 0}
+.di.folder.drop-target .di-img{box-shadow:0 0 20px rgba(59,130,246,.6);transform:scale(1.1)}
+.di.folder .folder-count{position:absolute;bottom:-2px;right:-2px;min-width:16px;height:16px;border-radius:8px;background:rgba(0,0,0,.5);color:#fff;font-size:.45rem;font-weight:700;display:flex;align-items:center;justify-content:center;padding:0 3px;font-family:Inter;backdrop-filter:blur(4px)}
+
+/* Folder Window */
+.folder-win{position:fixed;z-index:400;background:rgba(30,30,40,.92);backdrop-filter:blur(40px);-webkit-backdrop-filter:blur(40px);border:1px solid rgba(255,255,255,.1);border-radius:12px;box-shadow:0 16px 50px rgba(0,0,0,.5);display:none;min-width:340px;max-width:520px}
+.folder-win.on{display:block}
+.folder-win-bar{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.08);cursor:move}
+.folder-win-title{font-size:.78rem;font-weight:600;color:#fff;display:flex;align-items:center;gap:6px}
+.folder-win-title input{background:transparent;border:none;outline:none;color:#fff;font-size:.78rem;font-weight:600;font-family:'Noto Sans KR',Inter;width:120px}
+.folder-win-close{width:12px;height:12px;border-radius:50%;background:#ff5f57;cursor:pointer;border:none;transition:opacity .15s}
+.folder-win-close:hover{opacity:.8}
+.folder-win-body{padding:16px;display:flex;flex-wrap:wrap;gap:8px;min-height:100px;align-content:flex-start}
+.folder-win-body .di{position:relative!important;left:auto!important;top:auto!important;cursor:pointer}
+.folder-win-body .di:hover{transform:scale(1.08)}
+.folder-win-empty{width:100%;text-align:center;color:rgba(255,255,255,.25);font-size:.72rem;padding:24px 0}
+.folder-win-hint{padding:6px 14px;border-top:1px solid rgba(255,255,255,.06);font-size:.52rem;color:rgba(255,255,255,.2);text-align:center}
+.folder-back-btn{background:rgba(255,255,255,.1);border:none;color:#fff;font-size:1rem;width:22px;height:22px;border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s;padding:0;line-height:1}
+.folder-back-btn:hover{background:rgba(255,255,255,.2)}
+.folder-addsub-btn{background:rgba(255,255,255,.08);border:none;color:rgba(255,255,255,.6);font-size:.6rem;padding:3px 7px;border-radius:6px;cursor:pointer;transition:background .15s}
+.folder-addsub-btn:hover{background:rgba(255,255,255,.15);color:#fff}
+.folder-breadcrumb{padding:4px 14px;font-size:.52rem;color:rgba(255,255,255,.35);display:none;border-bottom:1px solid rgba(255,255,255,.04)}
+.folder-breadcrumb.on{display:flex;align-items:center;gap:3px;flex-wrap:wrap}
+.folder-breadcrumb span{cursor:pointer;padding:1px 4px;border-radius:3px;transition:background .15s}
+.folder-breadcrumb span:hover{background:rgba(255,255,255,.1);color:#fff}
+.folder-breadcrumb .bc-sep{color:rgba(255,255,255,.15);cursor:default;padding:0}
+.folder-breadcrumb .bc-sep:hover{background:none;color:rgba(255,255,255,.15)}
+.folder-breadcrumb .bc-current{color:rgba(255,255,255,.7);cursor:default}
+.folder-breadcrumb .bc-current:hover{background:none}
+.folder-win-body .di.subfolder{opacity:.9}
+.folder-win-body .di.subfolder .di-img{background:linear-gradient(135deg,#3b82f6,#1d4ed8)}
+.folder-win-body .di{position:relative!important}
+.folder-item-actions{display:flex;gap:4px;margin-top:2px}
+.folder-item-btn{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);border-radius:4px;color:rgba(255,255,255,.6);font-size:.48rem;padding:2px 6px;cursor:pointer;font-family:'Noto Sans KR',Inter;transition:all .15s}
+.folder-item-btn:hover{background:rgba(59,130,246,.3);color:#fff;border-color:rgba(59,130,246,.4)}
+.folder-item-btn.del:hover{background:rgba(239,68,68,.3);color:#fff;border-color:rgba(239,68,68,.4)}
+
+/* Icon Context Menu (for individual icons) */
+.icon-ctx{position:fixed;z-index:700;background:rgba(30,30,40,.95);backdrop-filter:blur(30px);border:1px solid rgba(255,255,255,.12);border-radius:8px;padding:3px 0;min-width:140px;box-shadow:0 10px 30px rgba(0,0,0,.5);display:none}
+.icon-ctx.on{display:block}
+.icon-ctx-i{padding:6px 14px;font-size:.72rem;color:rgba(255,255,255,.75);cursor:pointer;transition:background .1s;display:flex;align-items:center;gap:6px}
+.icon-ctx-i:hover{background:rgba(59,130,246,.3)}
+.icon-ctx-i.danger:hover{background:rgba(239,68,68,.3)}
+.icon-ctx-s{height:1px;background:rgba(255,255,255,.06);margin:3px 0}
+
+/* Trash Window */
+.trash-win{position:fixed;z-index:400;background:rgba(30,30,40,.92);backdrop-filter:blur(40px);-webkit-backdrop-filter:blur(40px);border:1px solid rgba(255,255,255,.1);border-radius:12px;box-shadow:0 16px 50px rgba(0,0,0,.5);display:none;min-width:360px;max-width:540px}
+.trash-win.on{display:block}
+.trash-win-bar{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.08);cursor:move}
+.trash-win-title{font-size:.78rem;font-weight:600;color:#fff;display:flex;align-items:center;gap:6px}
+.trash-win-close{width:12px;height:12px;border-radius:50%;background:#ff5f57;cursor:pointer;border:none;transition:opacity .15s}
+.trash-win-close:hover{opacity:.8}
+.trash-win-body{padding:16px;display:flex;flex-wrap:wrap;gap:8px;min-height:100px;max-height:50vh;overflow-y:auto;align-content:flex-start}
+.trash-win-body::-webkit-scrollbar{width:3px}.trash-win-body::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:3px}
+.trash-win-body .di{position:relative!important;left:auto!important;top:auto!important;cursor:pointer;opacity:.7}
+.trash-win-body .di:hover{transform:scale(1.08);opacity:1}
+.trash-win-empty{width:100%;text-align:center;color:rgba(255,255,255,.25);font-size:.72rem;padding:24px 0}
+.trash-win-footer{display:flex;justify-content:space-between;align-items:center;padding:8px 14px;border-top:1px solid rgba(255,255,255,.06)}
+.trash-win-footer .trash-info{font-size:.52rem;color:rgba(255,255,255,.25)}
+.trash-btn{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:6px;color:rgba(255,255,255,.6);font-size:.56rem;padding:4px 10px;cursor:pointer;font-family:'Noto Sans KR',Inter;transition:all .15s}
+.trash-btn:hover{background:rgba(59,130,246,.25);color:#fff;border-color:rgba(59,130,246,.3)}
+.trash-btn.danger:hover{background:rgba(239,68,68,.25);color:#fff;border-color:rgba(239,68,68,.3)}
+.trash-item-actions{display:flex;gap:4px;margin-top:2px}
+/* Dock trash badge */
+.dk-badge{position:absolute;top:-3px;right:-3px;min-width:15px;height:15px;border-radius:8px;background:#ef4444;color:#fff;font-size:.45rem;font-weight:700;display:none;align-items:center;justify-content:center;padding:0 3px;font-family:Inter}
+.dk-badge.on{display:flex}
+.dk{position:relative}
+#dock-links{display:flex;align-items:flex-end;gap:3px}
+.load-issue{position:fixed;top:calc(var(--menubar-h) + var(--extbar-h) + 8px);left:50%;transform:translateX(-50%);z-index:900;background:rgba(239,68,68,.92);color:#fff;font-size:.72rem;padding:8px 12px;border-radius:8px;border:1px solid rgba(255,255,255,.2);display:none;max-width:min(92vw,720px)}
+.load-issue.on{display:block}
+
+/* Animations */
+@keyframes iconIn{0%{opacity:0;transform:scale(0)}60%{opacity:1;transform:scale(1.08)}100%{opacity:1;transform:scale(1)}}
+.di.entering{animation:iconIn .3s ease forwards}
+/* Grid ghost line */
+.grid-ghost{position:fixed;pointer-events:none;z-index:0;opacity:0;transition:opacity .3s}
+.grid-ghost.on{opacity:1}
+
+@media(max-width:768px){
+  :root{--dock-h:64px}
+  .dk-icon{width:38px;height:38px;font-size:1.1rem}
+  .desktop{padding:14px 12px;grid-template-columns:repeat(auto-fill,68px);grid-template-rows:repeat(auto-fill,88px)}
+  .di{width:68px}.di-img{width:46px;height:46px;font-size:1.3rem}
+}
+</style>
+</head>
+<body>
+
+<!-- Boot -->
+<div class="boot" id="boot">
+  <div class="boot-logo">H</div>
+  <div class="boot-bar"><div class="boot-bar-fill"></div></div>
+  <div class="boot-txt">AI Desktop Loading...</div>
+</div>
+
+<!-- Menu Bar -->
+<div class="menubar" id="mbar" style="opacity:0">
+  <div class="mb-left">
+    <div class="mb-logo"><i>H</i> AI Desktop</div>
+    <div class="mb-item" onclick="toggleWP()">🎨 Wallpaper</div>
+    <div class="mb-item" onclick="openSP()">🔍 Search</div>
+  </div>
+  <div class="mb-right">
+    <div class="mb-sizer" title="Adjust icon size">
+      <span>A</span>
+      <input type="range" id="iconSizer" min="0.6" max="1.4" step="0.05" value="1">
+      <span style="font-size:.95rem">A</span>
+    </div>
+    <span id="clk"></span>
+  </div>
+</div>
+<div class="extbar" id="extbar" style="opacity:0">
+  <div class="extfilters" id="extFilters"></div>
+</div>
+<div class="load-issue" id="loadIssue"></div>
+
+<!-- Desktop Icons -->
+<div class="desktop" id="dt" style="opacity:0">
+  <div id="desktop-icons"></div>
+</div>
+
+<!-- Dock -->
+<div class="dock-wrap" id="dw" style="opacity:0">
+  <div class="dock">
+    <div id="dock-links"></div>
+    <div class="dk-sep"></div>
+    <div class="dk" onclick="openSP()" title="Search (Cmd+K)"><div class="dk-icon bg-gray">🔍</div></div>
+    <div class="dk-sep"></div>
+    <div class="dk" onclick="openTrash()" title="Trash" id="dkTrash"><div class="dk-icon" style="background:linear-gradient(135deg,#6b7280,#374151)">🗑️</div><span class="dk-badge" id="trashBadge">0</span></div>
+  </div>
+</div>
+
+<!-- Spotlight -->
+<div class="spot-bg" id="sp" onclick="if(event.target===this)closeSP()">
+  <div class="spot">
+    <div class="spot-top">
+      <span>🔍</span>
+      <input class="spot-inp" id="spInp" placeholder="Search folders or projects..." autocomplete="off">
+    </div>
+    <div class="spot-list" id="spList"></div>
+    <div class="spot-hint">⌘K search · ESC close · Enter open</div>
+  </div>
+</div>
+
+<!-- Mascot -->
+<div class="mascot" id="mascot" onclick="toggleTip()">
+  <div class="mc-bub" id="mcBub">
+    <div class="tl">💡 Tip</div>
+    <p id="tipTxt"></p>
+  </div>
+  <div class="mc-body"><span style="font-size:1.2rem">🤖</span></div>
+</div>
+
+<!-- Wallpaper Picker -->
+<div class="wpp" id="wpp">
+  <div class="wpp-t">Wallpaper</div>
+  <div class="wpp-g">
+    <div class="wps wps-a on" data-label="Base" onclick="setWP('',this)"></div>
+    <div class="wps wps-b" data-label="Aurora" onclick="setWP('wp-aurora',this)"></div>
+    <div class="wps wps-c" data-label="Sunset" onclick="setWP('wp-sunset',this)"></div>
+    <div class="wps wps-d" data-label="Ocean" onclick="setWP('wp-ocean',this)"></div>
+    <div class="wps wps-e" data-label="Forest" onclick="setWP('wp-forest',this)"></div>
+    <div class="wps wps-f" data-label="Light" onclick="setWP('wp-light',this)"></div>
+    <div class="wps wps-g" data-label="Rose" onclick="setWP('wp-rose',this)"></div>
+    <div class="wps wps-h" data-label="Midnight" onclick="setWP('wp-midnight',this)"></div>
+    <div class="wps wps-i" data-label="Gray" onclick="setWP('wp-warmgray',this)"></div>
+    <div class="wps wps-j" data-label="Peach" onclick="setWP('wp-peach',this)"></div>
+  </div>
+</div>
+
+<!-- Folder Window -->
+<div class="folder-win" id="folderWin">
+  <div class="folder-win-bar" id="folderWinBar">
+    <div class="folder-win-title">
+      <button class="folder-back-btn" id="folderBackBtn" onclick="navigateFolderBack()" title="Go to parent folder" style="display:none">‹</button>
+      📁 <input id="folderWinName" value="" spellcheck="false">
+    </div>
+    <div style="display:flex;align-items:center;gap:6px">
+      <button class="folder-addsub-btn" id="folderAddSubBtn" onclick="addSubFolder()" title="Create subfolder">+📁</button>
+      <div class="folder-win-close" onclick="closeFolderWin()"></div>
+    </div>
+  </div>
+  <div class="folder-breadcrumb" id="folderBreadcrumb"></div>
+  <div class="folder-win-body" id="folderWinBody"></div>
+  <div class="folder-win-hint">Drag icons onto a folder to add them · Click an icon to open</div>
+</div>
+
+<!-- Trash Window -->
+<div class="trash-win" id="trashWin">
+  <div class="trash-win-bar" id="trashWinBar">
+    <div class="trash-win-title">🗑️ Trash</div>
+    <div class="trash-win-close" onclick="closeTrash()"></div>
+  </div>
+  <div class="trash-win-body" id="trashWinBody"></div>
+  <div class="trash-win-footer">
+    <span class="trash-info" id="trashInfo">0 items</span>
+    <div style="display:flex;gap:6px">
+      <button class="trash-btn" id="trashRestoreAll">Restore All</button>
+      <button class="trash-btn danger" id="trashEmptyAll">Empty Trash</button>
+    </div>
+  </div>
+</div>
+
+<!-- Icon Context Menu -->
+<div class="icon-ctx" id="iconCtx">
+  <div class="icon-ctx-i" id="iconCtxOpen">📂 Open</div>
+  <div class="icon-ctx-s"></div>
+  <div class="icon-ctx-i danger" id="iconCtxDelete">🗑️ Delete</div>
+</div>
+
+<!-- Folder Context Menu -->
+<div class="icon-ctx" id="folderCtx">
+  <div class="icon-ctx-i" id="folderCtxOpen">📂 Open Folder</div>
+  <div class="icon-ctx-i" id="folderCtxRename">✏️ Rename</div>
+  <div class="icon-ctx-s"></div>
+  <div class="icon-ctx-i danger" id="folderCtxDelete">🗑️ Delete Folder</div>
+</div>
+
+<!-- Context Menu -->
+<div class="ctx" id="ctx">
+  <div class="ctx-i" id="ctxNewFolder" onclick="createFolder()">📁 New Folder</div>
+  <div class="ctx-i" id="ctxOpenSearch" onclick="openSP()">🔍 Open Search</div>
+  <div class="ctx-i" id="ctxChangeWallpaper" onclick="toggleWP()">🎨 Change Wallpaper</div>
+  <div class="ctx-s"></div>
+  <div class="ctx-i" id="ctxSortName" onclick="sortIconsBy('name')">🔤 Sort by Name</div>
+  <div class="ctx-i" id="ctxSortCategory" onclick="sortIconsBy('category')">📂 Sort by Category</div>
+  <div class="ctx-i" id="ctxSortRoot" onclick="sortIconsBy('root')">🗂️ Sort by Root</div>
+  <div class="ctx-i" id="ctxSortExtension" onclick="sortIconsBy('extension')">🧩 Sort by Extension</div>
+  <div class="ctx-i" id="ctxSortModified" onclick="sortIconsBy('modified')">🕒 Sort by Modified</div>
+  <div class="ctx-i" id="ctxSortCreated" onclick="sortIconsBy('created')">🗓️ Sort by Created</div>
+  <div class="ctx-i" id="ctxResetIcons" onclick="resetPositions()">📐 Reset Icon Layout</div>
+  <div class="ctx-s"></div>
+  <div class="ctx-i" id="ctxOpenTrash" onclick="openTrash()">🗑️ Open Trash</div>
+  <div class="ctx-i" id="ctxRefresh" onclick="location.reload()">🔄 Refresh</div>
+</div>
+
+<script>
+// === Config ===
+var BASE_GRID_W=88, BASE_GRID_H=100, PAD_X=20, PAD_Y=16, DRAG_THRESHOLD=6;
+var GRID_W=BASE_GRID_W, GRID_H=BASE_GRID_H;
+var STORAGE_KEY='pos-v2';
+var ICON_SCALE_KEY='icon-scale';
+var WALLPAPER_KEY='wallpaper';
+var FOLDER_KEY='folders-v1';
+var HIDDEN_KEY='hidden-v1';
+var TRASH_KEY='trash-v1';
+var APP_NAMESPACE='ai-desktop';
+var APP_LOCALE='en';
+var allIcons=[];
+var items=[];
+var currentTypeFilter='all';
+var FILTER_TYPES=['all','folder','doc','web','data','slide','code','image'];
+var savedPositionsBeforeFilter=null;
+
+var I18N_DEFAULT={
+  ui_boot_loading:'AI Desktop Loading...',
+  ui_menu_wallpaper:'🎨 Wallpaper',
+  ui_menu_search:'🔍 Search',
+  ui_sizer_title:'Adjust icon size',
+  ui_dock_search_title:'Search (Cmd+K)',
+  ui_dock_trash_title:'Trash',
+  ui_spot_placeholder:'Search folders or projects...',
+  ui_spot_hint:'⌘K search · ESC close · Enter open',
+  ui_wallpaper_title:'Wallpaper',
+  ui_wallpaper_labels:['Base','Aurora','Sunset','Ocean','Forest','Light','Rose','Midnight','Gray','Peach'],
+  ui_folder_back_title:'Go to parent folder',
+  ui_folder_addsub_title:'Create subfolder',
+  ui_folder_hint:'Drag icons onto a folder to add them · Click an icon to open',
+  ui_trash_title:'🗑️ Trash',
+  ui_trash_count:'{count} items',
+  ui_trash_restore_all:'Restore All',
+  ui_trash_empty_all:'Empty Trash',
+  ui_iconctx_open:'📂 Open',
+  ui_iconctx_delete:'🗑️ Delete',
+  ui_folderctx_open:'📂 Open Folder',
+  ui_folderctx_rename:'✏️ Rename',
+  ui_folderctx_delete:'🗑️ Delete Folder',
+  ui_ctx_new_folder:'📁 New Folder',
+  ui_ctx_open_search:'🔍 Open Search',
+  ui_ctx_change_wallpaper:'🎨 Change Wallpaper',
+  ui_ctx_sort_name:'🔤 Sort by Name',
+  ui_ctx_sort_category:'📂 Sort by Category',
+  ui_ctx_sort_root:'🗂️ 경로(루트)순 정렬',
+  ui_ctx_sort_extension:'🧩 확장자순 정렬',
+  ui_ctx_sort_modified:'🕒 최근 수정순 정렬',
+  ui_ctx_sort_created:'🗓️ 최근 생성순 정렬',
+  ui_ctx_reset_icons:'📐 Reset Icon Layout',
+  ui_ctx_open_trash:'🗑️ Open Trash',
+  ui_ctx_refresh:'🔄 Refresh',
+  ui_action_open:'Open',
+  ui_action_remove:'Remove',
+  ui_action_delete:'Delete',
+  ui_action_restore:'Restore',
+  ui_spot_empty:'No results',
+  ui_folder_empty:'Folder is empty.<br>Drag icons here to add.',
+  ui_trash_empty:'Trash is empty.',
+  ui_folder_new_name:'New Folder',
+  ui_subfolder_new_name:'New Subfolder',
+  ui_category_misc:'Misc',
+  msg_confirm_delete_subfolder:'Delete subfolder "{name}"?',
+  msg_prompt_folder_name:'Enter folder name:',
+  msg_confirm_restore_all:'Restore all {count} items?',
+  msg_confirm_empty_trash:'Emptying trash permanently removes items from this dashboard.\nEmpty {count} items?',
+  ui_load_warning:'Failed to load config. Run with a local static server or check the config path.',
+  ui_filter_all:'전체',
+  ui_filter_folder:'폴더',
+  ui_filter_doc:'문서',
+  ui_filter_web:'웹',
+  ui_filter_data:'데이터',
+  ui_filter_slide:'슬라이드',
+  ui_filter_code:'코드',
+  ui_filter_image:'이미지',
+  ui_tip_title:'💡 Tip',
+  tips:[
+    'Press Cmd+K to search from anywhere.',
+    'Drag icons to place them where you want.',
+    'Icon positions are saved automatically.'
+  ]
+};
+var I18N=I18N_DEFAULT;
+var APP_CONFIG={icons:[],dock:[]};
+var dataReady=loadRuntimeData();
+
+function inferHomeDir(){
+  var m=String(location.href||'').match(/^file:\/\/\/Users\/([^/]+)/);
+  if(m&&m[1])return '/Users/'+decodeURIComponent(m[1]);
+  return '';
+}
+
+function loadRuntimeData(){
+  var params=new URLSearchParams(location.search||'');
+  var cfgFile=params.get('config');
+  var locale=params.get('lang')||'en';
+  APP_LOCALE=locale;
+  var configPromise=cfgFile
+    ? fetchJSON(cfgFile)
+    : fetchJSON('dashboard-config.local.json').then(function(localCfg){
+      if(localCfg)return localCfg;
+      return fetchJSON('dashboard-config.json');
+    });
+  return Promise.all([
+    configPromise,
+    fetchJSON('i18n/'+locale+'.json')
+  ]).then(function(results){
+    if(results[0])APP_CONFIG=results[0];
+    APP_NAMESPACE=APP_CONFIG.namespace||APP_NAMESPACE;
+    window.HOME_DIR=APP_CONFIG.homeDir||inferHomeDir()||window.HOME_DIR||'';
+    I18N=Object.assign({},I18N_DEFAULT,results[1]||{});
+    renderDesktopIcons(APP_CONFIG.icons||[]);
+    renderDockLinks(APP_CONFIG.dock||[]);
+    rebuildIconCaches();
+    renderTypeFilters(APP_CONFIG.icons||[]);
+    applyI18NText();
+    applyTypeFilter(currentTypeFilter);
+    if(!results[0])notifyLoadIssue();
+  }).catch(function(){
+    APP_NAMESPACE=APP_CONFIG.namespace||APP_NAMESPACE;
+    window.HOME_DIR=APP_CONFIG.homeDir||inferHomeDir()||window.HOME_DIR||'';
+    renderDesktopIcons(APP_CONFIG.icons||[]);
+    renderDockLinks(APP_CONFIG.dock||[]);
+    rebuildIconCaches();
+    renderTypeFilters(APP_CONFIG.icons||[]);
+    applyI18NText();
+    applyTypeFilter(currentTypeFilter);
+    notifyLoadIssue();
+  });
+}
+
+function nsKey(key){
+  return APP_NAMESPACE+':'+key;
+}
+
+function storageGet(key){
+  try{return localStorage.getItem(nsKey(key))}catch(e){return null}
+}
+
+function storageSet(key,val){
+  try{localStorage.setItem(nsKey(key),val)}catch(e){}
+}
+
+function notifyLoadIssue(){
+  var box=document.getElementById('loadIssue');
+  if(!box)return;
+  box.textContent=I18N.ui_load_warning;
+  box.classList.add('on');
+}
+
+function tr(key, vars){
+  var text=I18N[key];
+  if(text===undefined||text===null)text=I18N_DEFAULT[key];
+  if(typeof text!=='string')return text;
+  return text.replace(/\{(\w+)\}/g,function(_,k){
+    return vars&&vars[k]!==undefined?String(vars[k]):'{'+k+'}';
+  });
+}
+
+function fetchJSON(path){
+  return fetch(path,{cache:'no-store'}).then(function(r){
+    if(!r.ok)throw new Error('failed');
+    return r.json();
+  }).catch(function(){return null});
+}
+
+function normalizeFsPath(p){
+  return String(p||'').replace(/\\/g,'/');
+}
+
+function isAbsoluteFsPath(p){
+  var n=normalizeFsPath(p);
+  return n.charAt(0)==='/'||/^[a-zA-Z]:\//.test(n)||/^\/\/[^\/]+/.test(n);
+}
+
+function resolveHref(path){
+  if(!path)return '#';
+  if(path.indexOf('http://')===0||path.indexOf('https://')===0)return path;
+  var p=String(path);
+  if(p.indexOf('file://')===0){
+    p=decodeURI(p.replace(/^file:\/\//,''));
+  } else if(/^(\$HOME|\{HOME\}|~)([\/]|$)/.test(p)){
+    if(location.protocol.indexOf('http')===0)return '/open?path='+encodeURIComponent(p);
+    p=p.replace(/\$HOME|\{HOME\}|~/g,(window.HOME_DIR||''));
+  } else {
+    p=p.replace(/\$HOME|\{HOME\}|~/g,(window.HOME_DIR||''));
+  }
+  if(isAbsoluteFsPath(p)){
+    if(location.protocol.indexOf('http')===0)return '/open?path='+encodeURIComponent(p);
+    var n=normalizeFsPath(p);
+    if(/^[a-zA-Z]:\//.test(n))return 'file:///'+encodeURI(n);
+    return 'file://'+encodeURI(n);
+  }
+  return p;
+}
+
+function renderDesktopIcons(iconList){
+  var host=document.getElementById('desktop-icons');
+  host.innerHTML='';
+  var lastCategory='';
+  iconList.forEach(function(item){
+    var category=item.category||'Etc';
+    if(category!==lastCategory){
+      var sep=document.createElement('div');
+      sep.className='desk-sep';
+      sep.innerHTML='<span>'+category+'</span>';
+      host.appendChild(sep);
+      lastCategory=category;
+    }
+    var a=document.createElement('a');
+    a.className='di';
+    a.href=resolveHref(item.path||item.href);
+    a.dataset.n=item.label||item.name||'';
+    a.dataset.c=category;
+    a.dataset.rootOrder=String(getRootOrder(item.path||item.href));
+    a.dataset.modifiedAt=item.modifiedAt||'';
+    a.dataset.createdAt=item.createdAt||'';
+    a.dataset.extcat=getTypeCategory(item.path||item.href,item.icon||'');
+    a.innerHTML='<div class="di-img '+(item.bg||'bg-blue')+'">'+(item.icon||'📄')+'</div><div class="di-lbl">'+(item.label||item.name||'Untitled')+'</div>';
+    host.appendChild(a);
+  });
+}
+
+function normalizeRootPath(pathVal){
+  var p=normalizeFsPath(decodeURI(String(pathVal||'')));
+  if(p.indexOf('file://')===0)p=p.replace(/^file:\/\//,'');
+  var home=normalizeFsPath(window.HOME_DIR||'');
+  if(home&&p.indexOf(home)===0)p='$HOME'+p.slice(home.length);
+  p=p.replace(/^\{HOME\}/,'$HOME').replace(/^~/,'$HOME');
+  return p;
+}
+
+function getRootOrder(pathVal){
+  var p=normalizeRootPath(pathVal);
+  var roots=APP_CONFIG&&Array.isArray(APP_CONFIG.roots)?APP_CONFIG.roots:[];
+  for(var i=0;i<roots.length;i++){
+    var r=normalizeRootPath(roots[i]);
+    if(p===r||p.indexOf(r+'/')===0||p.indexOf(r+'\\')===0||p.indexOf(r)===0)return i;
+  }
+  return 999999;
+}
+
+function getTypeCategory(pathVal,iconVal){
+  var p=normalizeFsPath(String(pathVal||'')).toLowerCase();
+  var icon=String(iconVal||'');
+  if(icon==='📁'||/[\\/]$/.test(p))return 'folder';
+  var ext=(p.match(/\.([a-z0-9]+)(?:[#?].*)?$/)||[])[1]||'';
+  if(['md','txt','doc','docx','pdf','rtf'].indexOf(ext)>=0)return 'doc';
+  if(['html','htm'].indexOf(ext)>=0)return 'web';
+  if(['json','csv','tsv','yaml','yml'].indexOf(ext)>=0)return 'data';
+  if(['ppt','pptx','key'].indexOf(ext)>=0)return 'slide';
+  if(['js','ts','py','sh','zsh','rb','go','java','cpp','c','swift','php','rs'].indexOf(ext)>=0)return 'code';
+  if(['png','jpg','jpeg','webp','gif','svg'].indexOf(ext)>=0)return 'image';
+  return 'doc';
+}
+
+function getTypeLabel(type){
+  var map={
+    all:I18N.ui_filter_all||'전체',
+    folder:I18N.ui_filter_folder||'폴더',
+    doc:I18N.ui_filter_doc||'문서',
+    web:I18N.ui_filter_web||'웹',
+    data:I18N.ui_filter_data||'데이터',
+    slide:I18N.ui_filter_slide||'슬라이드',
+    code:I18N.ui_filter_code||'코드',
+    image:I18N.ui_filter_image||'이미지'
+  };
+  return map[type]||type;
+}
+
+function renderTypeFilters(iconList){
+  var host=document.getElementById('extFilters');
+  if(!host)return;
+  var counts={all:iconList.length,folder:0,doc:0,web:0,data:0,slide:0,code:0,image:0};
+  iconList.forEach(function(item){
+    var t=getTypeCategory(item.path||item.href,item.icon||'');
+    counts[t]=(counts[t]||0)+1;
+  });
+  host.innerHTML='';
+  FILTER_TYPES.forEach(function(type){
+    var btn=document.createElement('button');
+    btn.type='button';
+    btn.className='extf'+(type===currentTypeFilter?' on':'');
+    btn.dataset.type=type;
+    btn.textContent=getTypeLabel(type)+' ('+(counts[type]||0)+')';
+    btn.addEventListener('click',function(){applyTypeFilter(type)});
+    host.appendChild(btn);
+  });
+}
+
+function applyTypeFilter(type){
+  var wasAll=(currentTypeFilter==='all');
+  currentTypeFilter=type||'all';
+  if(wasAll&&currentTypeFilter!=='all'){
+    savedPositionsBeforeFilter=allIcons.map(function(el){
+      return {x:parseInt(el.style.left)||0,y:parseInt(el.style.top)||0};
+    });
+  }
+  allIcons.forEach(function(el){
+    var cat=el.dataset.extcat||'doc';
+    var visible=(currentTypeFilter==='all'||cat===currentTypeFilter);
+    el.classList.toggle('ext-hidden',!visible);
+  });
+  if(currentTypeFilter==='all'){
+    restorePositionsAfterFilter();
+  } else {
+    compactVisibleIconsLeft();
+  }
+  document.querySelectorAll('#extFilters .extf').forEach(function(btn){
+    btn.classList.toggle('on',btn.dataset.type===currentTypeFilter);
+  });
+}
+
+function compactVisibleIconsLeft(){
+  var g=calcGrid();
+  var col=0,row=0;
+  allIcons.forEach(function(el){
+    if(el.classList.contains('ext-hidden')||el.style.display==='none')return;
+    el.style.transition='left .24s ease,top .24s ease';
+    el.style.left=(PAD_X+col*GRID_W)+'px';
+    el.style.top=(PAD_Y+row*GRID_H)+'px';
+    row++;
+    if(row>=g.rows){row=0;col++;}
+  });
+  setTimeout(function(){
+    allIcons.forEach(function(el){el.style.transition=''});
+  },260);
+}
+
+function restorePositionsAfterFilter(){
+  var pos=savedPositionsBeforeFilter;
+  if(!pos||!pos.length)pos=loadPositions();
+  if(pos&&pos.length===allIcons.length){
+    allIcons.forEach(function(el,i){
+      if(!pos[i])return;
+      el.style.transition='left .24s ease,top .24s ease';
+      el.style.left=pos[i].x+'px';
+      el.style.top=pos[i].y+'px';
+    });
+    setTimeout(function(){
+      allIcons.forEach(function(el){el.style.transition=''});
+    },260);
+  }
+  savedPositionsBeforeFilter=null;
+}
+
+function renderDockLinks(dockList){
+  var host=document.getElementById('dock-links');
+  host.innerHTML='';
+  dockList.forEach(function(item){
+    if(item.type==='separator'){
+      var sep=document.createElement('div');
+      sep.className='dk-sep';
+      host.appendChild(sep);
+      return;
+    }
+    var a=document.createElement('a');
+    a.className='dk';
+    a.href=resolveHref(item.path||item.href);
+    a.title=item.title||item.label||'';
+    a.innerHTML='<div class="dk-icon '+(item.bg||'bg-blue')+'">'+(item.icon||'📁')+'</div><div class="dk-dot"></div>';
+    host.appendChild(a);
+  });
+}
+
+function rebuildIconCaches(){
+  allIcons=Array.prototype.slice.call(document.querySelectorAll('.di[href]'));
+  items=[];
+  allIcons.forEach(function(e,i){
+    e.dataset.idx=i;
+    items.push({
+      n:e.dataset.n||e.querySelector('.di-lbl').textContent,
+      c:e.dataset.c||'',
+      h:e.href,
+      icon:e.querySelector('.di-img').textContent.trim().charAt(0)||'📁',
+      bg:Array.from(e.querySelector('.di-img').classList).find(function(x){return x.indexOf('bg-')===0})||'bg-blue'
+    });
+  });
+  bindIconClickPrevention();
+}
+
+function bindIconClickPrevention(){
+  allIcons.forEach(function(el){
+    el.addEventListener('click',function(e){e.preventDefault()});
+  });
+}
+
+function applyI18NText(){
+  var bootTxt=document.querySelector('.boot-txt');
+  if(bootTxt)bootTxt.textContent=I18N.ui_boot_loading;
+  var menu=document.querySelectorAll('.mb-item');
+  if(menu[0])menu[0].textContent=I18N.ui_menu_wallpaper;
+  if(menu[1])menu[1].textContent=I18N.ui_menu_search;
+  var sizer=document.querySelector('.mb-sizer');
+  if(sizer)sizer.title=I18N.ui_sizer_title;
+  var dkSearch=document.querySelector('.dock .dk[onclick*=\"openSP\"]');
+  if(dkSearch)dkSearch.title=I18N.ui_dock_search_title;
+  var dkTrash=document.getElementById('dkTrash');
+  if(dkTrash)dkTrash.title=I18N.ui_dock_trash_title;
+  document.getElementById('spInp').placeholder=I18N.ui_spot_placeholder;
+  var spotHint=document.querySelector('.spot-hint');
+  if(spotHint)spotHint.textContent=I18N.ui_spot_hint;
+  var wpTitle=document.querySelector('.wpp-t');
+  if(wpTitle)wpTitle.textContent=I18N.ui_wallpaper_title;
+  var wpLabels=Array.isArray(I18N.ui_wallpaper_labels)?I18N.ui_wallpaper_labels:I18N_DEFAULT.ui_wallpaper_labels;
+  document.querySelectorAll('.wps').forEach(function(el,idx){
+    if(wpLabels[idx])el.setAttribute('data-label',wpLabels[idx]);
+  });
+  var folderBack=document.getElementById('folderBackBtn');
+  if(folderBack)folderBack.title=I18N.ui_folder_back_title;
+  var folderAdd=document.getElementById('folderAddSubBtn');
+  if(folderAdd)folderAdd.title=I18N.ui_folder_addsub_title;
+  var folderHint=document.querySelector('.folder-win-hint');
+  if(folderHint)folderHint.textContent=I18N.ui_folder_hint;
+  var trashTitle=document.querySelector('.trash-win-title');
+  if(trashTitle)trashTitle.textContent=I18N.ui_trash_title;
+  var restoreAll=document.getElementById('trashRestoreAll');
+  if(restoreAll)restoreAll.textContent=I18N.ui_trash_restore_all;
+  var emptyAll=document.getElementById('trashEmptyAll');
+  if(emptyAll)emptyAll.textContent=I18N.ui_trash_empty_all;
+  var trashInfo=document.getElementById('trashInfo');
+  if(trashInfo)trashInfo.textContent=tr('ui_trash_count',{count:0});
+  var iconCtxOpen=document.getElementById('iconCtxOpen');
+  if(iconCtxOpen)iconCtxOpen.textContent=I18N.ui_iconctx_open;
+  var iconCtxDelete=document.getElementById('iconCtxDelete');
+  if(iconCtxDelete)iconCtxDelete.textContent=I18N.ui_iconctx_delete;
+  var folderCtxOpen=document.getElementById('folderCtxOpen');
+  if(folderCtxOpen)folderCtxOpen.textContent=I18N.ui_folderctx_open;
+  var folderCtxRename=document.getElementById('folderCtxRename');
+  if(folderCtxRename)folderCtxRename.textContent=I18N.ui_folderctx_rename;
+  var folderCtxDelete=document.getElementById('folderCtxDelete');
+  if(folderCtxDelete)folderCtxDelete.textContent=I18N.ui_folderctx_delete;
+  document.getElementById('ctxNewFolder').textContent=I18N.ui_ctx_new_folder;
+  document.getElementById('ctxOpenSearch').textContent=I18N.ui_ctx_open_search;
+  document.getElementById('ctxChangeWallpaper').textContent=I18N.ui_ctx_change_wallpaper;
+  document.getElementById('ctxSortName').textContent=I18N.ui_ctx_sort_name;
+  document.getElementById('ctxSortCategory').textContent=I18N.ui_ctx_sort_category;
+  document.getElementById('ctxSortRoot').textContent=I18N.ui_ctx_sort_root;
+  document.getElementById('ctxSortExtension').textContent=I18N.ui_ctx_sort_extension;
+  document.getElementById('ctxSortModified').textContent=I18N.ui_ctx_sort_modified;
+  document.getElementById('ctxSortCreated').textContent=I18N.ui_ctx_sort_created;
+  document.getElementById('ctxResetIcons').textContent=I18N.ui_ctx_reset_icons;
+  document.getElementById('ctxOpenTrash').textContent=I18N.ui_ctx_open_trash;
+  document.getElementById('ctxRefresh').textContent=I18N.ui_ctx_refresh;
+  tips=I18N.tips||I18N_DEFAULT.tips;
+  var tipTitle=document.querySelector('.mc-bub .tl');
+  if(tipTitle)tipTitle.textContent=I18N.ui_tip_title;
+  var issue=document.getElementById('loadIssue');
+  if(issue&&issue.classList.contains('on'))issue.textContent=I18N.ui_load_warning;
+  renderTypeFilters(APP_CONFIG.icons||[]);
+  applyTypeFilter(currentTypeFilter);
+}
+
+// === Icon Size Scaling ===
+function getIconScale(){
+  try{var s=storageGet(ICON_SCALE_KEY);if(s)return parseFloat(s)}catch(e){}
+  return 1;
+}
+function saveIconScale(v){
+  storageSet(ICON_SCALE_KEY,String(v));
+}
+function applyIconScale(scale){
+  // Update CSS custom properties via style
+  var iconW=Math.round(52*scale);
+  var iconH=Math.round(52*scale);
+  var diW=Math.round(76*scale);
+  var fontSize=(1.5*scale)+'rem';
+  var lblSize=(0.58*scale)+'rem';
+  GRID_W=Math.round(BASE_GRID_W*scale);
+  GRID_H=Math.round(BASE_GRID_H*scale);
+
+  document.querySelectorAll('.desktop .di').forEach(function(el){
+    el.style.width=diW+'px';
+    var img=el.querySelector('.di-img');
+    if(img){img.style.width=iconW+'px';img.style.height=iconH+'px';img.style.fontSize=fontSize;img.style.borderRadius=Math.round(13*scale)+'px'}
+    var lbl=el.querySelector('.di-lbl');
+    if(lbl){lbl.style.fontSize=lblSize;lbl.style.maxWidth=diW+'px'}
+  });
+  // Also scale folder icons
+  folderEls.forEach(function(el){
+    el.style.width=diW+'px';
+    var img=el.querySelector('.di-img');
+    if(img){img.style.width=iconW+'px';img.style.height=iconH+'px';img.style.fontSize=fontSize;img.style.borderRadius=Math.round(13*scale)+'px'}
+    var lbl=el.querySelector('.di-lbl');
+    if(lbl){lbl.style.fontSize=lblSize;lbl.style.maxWidth=diW+'px'}
+  });
+  saveIconScale(scale);
+  // Auto re-arrange all icons to fit new grid
+  rearrangeAll();
+}
+
+function rearrangeAll(){
+  var g=calcGrid();
+  var col=0, row=0;
+  // Rearrange visible icons
+  allIcons.forEach(function(el){
+    if(el.style.display==='none')return;
+    el.style.left=(PAD_X+col*GRID_W)+'px';
+    el.style.top=(PAD_Y+row*GRID_H)+'px';
+    row++;
+    if(row>=g.rows){row=0;col++;}
+  });
+  // Rearrange folder icons
+  var folders=loadFolders();
+  folderEls.forEach(function(el){
+    el.style.left=(PAD_X+col*GRID_W)+'px';
+    el.style.top=(PAD_Y+row*GRID_H)+'px';
+    var fid=el.dataset.folderId;
+    var f=folders.find(function(x){return x.id===fid});
+    if(f){f.x=PAD_X+col*GRID_W;f.y=PAD_Y+row*GRID_H;}
+    row++;
+    if(row>=g.rows){row=0;col++;}
+  });
+  saveFolders(folders);
+  // Save icon positions
+  var pos=[];
+  allIcons.forEach(function(el){
+    pos.push({x:parseInt(el.style.left)||0,y:parseInt(el.style.top)||0});
+  });
+  savePositions(pos);
+}
+
+// Window resize → re-arrange if icons overflow
+var resizeTimer=null;
+window.addEventListener('resize',function(){
+  clearTimeout(resizeTimer);
+  resizeTimer=setTimeout(function(){
+    var g=calcGrid();
+    var overflow=false;
+    allIcons.forEach(function(el){
+      if(el.style.display==='none')return;
+      var x=parseInt(el.style.left)||0, y=parseInt(el.style.top)||0;
+      if(x+GRID_W>g.dtW||y+GRID_H>g.dtH)overflow=true;
+    });
+    folderEls.forEach(function(el){
+      var x=parseInt(el.style.left)||0, y=parseInt(el.style.top)||0;
+      if(x+GRID_W>g.dtW||y+GRID_H>g.dtH)overflow=true;
+    });
+    if(overflow)rearrangeAll();
+  },300);
+});
+
+// === Sort Icons ===
+function sortIconsBy(mode){
+  // Collect visible icon indices with their sort key
+  var visibleIdxs=[];
+  allIcons.forEach(function(el,i){
+    if(el.style.display==='none'||el.classList.contains('ext-hidden'))return;
+    var name=el.dataset.n||el.querySelector('.di-lbl').textContent||'';
+    var cat=el.dataset.c||I18N.ui_category_misc;
+    var rootOrder=parseInt(el.dataset.rootOrder,10);
+    if(isNaN(rootOrder))rootOrder=999999;
+    var href=decodeURI(el.getAttribute('href')||'');
+    var extMatch=href.toLowerCase().match(/\.([a-z0-9]+)(?:[#?].*)?$/);
+    var ext=extMatch?extMatch[1]:'';
+    var modifiedAt=Date.parse(el.dataset.modifiedAt||'')||0;
+    var createdAt=Date.parse(el.dataset.createdAt||'')||0;
+    visibleIdxs.push({idx:i, name:name, cat:cat, rootOrder:rootOrder, ext:ext, modifiedAt:modifiedAt, createdAt:createdAt});
+  });
+  if(mode==='name'){
+    visibleIdxs.sort(function(a,b){return a.name.localeCompare(b.name,'ko')});
+  } else if(mode==='category'){
+    visibleIdxs.sort(function(a,b){
+      var cc=a.cat.localeCompare(b.cat,'ko');
+      return cc!==0?cc:a.name.localeCompare(b.name,'ko');
+    });
+  } else if(mode==='root'){
+    visibleIdxs.sort(function(a,b){
+      if(a.rootOrder!==b.rootOrder)return a.rootOrder-b.rootOrder;
+      return a.name.localeCompare(b.name,'ko');
+    });
+  } else if(mode==='extension'){
+    visibleIdxs.sort(function(a,b){
+      var ae=a.ext||'zzz';
+      var be=b.ext||'zzz';
+      var ec=ae.localeCompare(be,'ko');
+      return ec!==0?ec:a.name.localeCompare(b.name,'ko');
+    });
+  } else if(mode==='modified'){
+    visibleIdxs.sort(function(a,b){
+      if(b.modifiedAt!==a.modifiedAt)return b.modifiedAt-a.modifiedAt;
+      return a.name.localeCompare(b.name,'ko');
+    });
+  } else if(mode==='created'){
+    visibleIdxs.sort(function(a,b){
+      var ac=a.createdAt||a.modifiedAt||0;
+      var bc=b.createdAt||b.modifiedAt||0;
+      if(bc!==ac)return bc-ac;
+      return a.name.localeCompare(b.name,'ko');
+    });
+  }
+  // Place sorted icons on grid
+  var g=calcGrid();
+  var col=0, row=0;
+  visibleIdxs.forEach(function(item){
+    allIcons[item.idx].style.left=(PAD_X+col*GRID_W)+'px';
+    allIcons[item.idx].style.top=(PAD_Y+row*GRID_H)+'px';
+    allIcons[item.idx].style.transition='left .3s,top .3s';
+    row++;
+    if(row>=g.rows){row=0;col++;}
+  });
+  // Place folders after sorted icons
+  var folders=loadFolders();
+  folderEls.forEach(function(el){
+    el.style.left=(PAD_X+col*GRID_W)+'px';
+    el.style.top=(PAD_Y+row*GRID_H)+'px';
+    el.style.transition='left .3s,top .3s';
+    var fid=el.dataset.folderId;
+    var f=folders.find(function(x){return x.id===fid});
+    if(f){f.x=PAD_X+col*GRID_W;f.y=PAD_Y+row*GRID_H;}
+    row++;
+    if(row>=g.rows){row=0;col++;}
+  });
+  saveFolders(folders);
+  // Save
+  var pos=[];
+  allIcons.forEach(function(el){
+    pos.push({x:parseInt(el.style.left)||0,y:parseInt(el.style.top)||0});
+  });
+  savePositions(pos);
+  // Remove transition after animation
+  setTimeout(function(){
+    allIcons.forEach(function(el){el.style.transition=''});
+    folderEls.forEach(function(el){el.style.transition=''});
+  },350);
+}
+
+// === Icon cache is built after runtime config render ===
+
+// === Grid Layout ===
+function calcGrid(){
+  var dt=document.getElementById('dt');
+  var dtW=dt.offsetWidth, dtH=dt.offsetHeight;
+  var cols=Math.floor((dtW - PAD_X)/(GRID_W));
+  var rows=Math.floor((dtH - PAD_Y)/(GRID_H));
+  return {cols:cols,rows:rows,dtW:dtW,dtH:dtH};
+}
+
+function defaultPositions(){
+  var g=calcGrid();
+  var positions=[];
+  var col=0, row=0;
+  allIcons.forEach(function(el,i){
+    positions.push({x:PAD_X+col*GRID_W, y:PAD_Y+row*GRID_H});
+    row++;
+    if(row>=g.rows){row=0;col++;}
+  });
+  return positions;
+}
+
+function snapToGrid(x,y){
+  var g=calcGrid();
+  var col=Math.round((x-PAD_X)/GRID_W);
+  var row=Math.round((y-PAD_Y)/GRID_H);
+  col=Math.max(0,Math.min(col,g.cols-1));
+  row=Math.max(0,Math.min(row,g.rows-1));
+  return {x:PAD_X+col*GRID_W, y:PAD_Y+row*GRID_H};
+}
+
+function loadPositions(){
+  try{var s=storageGet(STORAGE_KEY);if(s)return JSON.parse(s)}catch(e){}
+  return null;
+}
+function savePositions(pos){
+  storageSet(STORAGE_KEY,JSON.stringify(pos));
+}
+
+function applyPositions(pos,animate){
+  allIcons.forEach(function(el,i){
+    if(pos[i]){
+      el.style.left=pos[i].x+'px';
+      el.style.top=pos[i].y+'px';
+      if(animate){
+        el.classList.add('entering');
+        el.style.animationDelay=(i*.025)+'s';
+        setTimeout(function(){el.classList.remove('entering')},600);
+      }
+    }
+  });
+}
+
+function resetPositions(){
+  var pos=defaultPositions();
+  applyPositions(pos,true);
+  savePositions(pos);
+}
+
+// === Drag & Drop ===
+var dragEl=null, dragStartX=0, dragStartY=0, dragOrigX=0, dragOrigY=0, dragged=false;
+
+function onPointerDown(e){
+  var icon=e.target.closest('.di');
+  if(!icon||e.button!==0)return;
+  e.preventDefault();
+  dragEl=icon;
+  dragged=false;
+  dragStartX=e.clientX;
+  dragStartY=e.clientY;
+  dragOrigX=parseInt(icon.style.left)||0;
+  dragOrigY=parseInt(icon.style.top)||0;
+}
+
+function onPointerMove(e){
+  if(!dragEl)return;
+  var dx=e.clientX-dragStartX, dy=e.clientY-dragStartY;
+  if(!dragged && Math.abs(dx)+Math.abs(dy)<DRAG_THRESHOLD)return;
+  dragged=true;
+  dragEl.classList.add('dragging');
+  var dt=document.getElementById('dt');
+  var newX=Math.max(0,Math.min(dragOrigX+dx, dt.offsetWidth-76));
+  var newY=Math.max(0,Math.min(dragOrigY+dy, dt.offsetHeight-96));
+  dragEl.style.left=newX+'px';
+  dragEl.style.top=newY+'px';
+}
+
+function onPointerUp(e){
+  if(!dragEl)return;
+  dragEl.classList.remove('dragging');
+  if(dragged){
+    // Snap to grid
+    var curX=parseInt(dragEl.style.left)||0;
+    var curY=parseInt(dragEl.style.top)||0;
+    var snapped=snapToGrid(curX,curY);
+    dragEl.style.left=snapped.x+'px';
+    dragEl.style.top=snapped.y+'px';
+    // Save all positions
+    var pos=[];
+    allIcons.forEach(function(el){
+      pos.push({x:parseInt(el.style.left)||0, y:parseInt(el.style.top)||0});
+    });
+    savePositions(pos);
+  } else {
+    // It was a click, follow the link
+    if(dragEl.href) window.location.href=dragEl.href;
+  }
+  dragEl=null;
+  dragged=false;
+}
+
+document.getElementById('dt').addEventListener('pointerdown',onPointerDown);
+document.addEventListener('pointermove',onPointerMove);
+document.addEventListener('pointerup',onPointerUp);
+
+// === Boot ===
+setTimeout(function(){
+  dataReady.finally(function(){
+    var b=document.getElementById('boot');
+    b.classList.add('hide');
+    document.getElementById('mbar').style.opacity='1';
+    document.getElementById('extbar').style.opacity='1';
+    document.getElementById('dt').style.opacity='1';
+    document.getElementById('dw').style.opacity='1';
+    // Apply positions
+    var saved=loadPositions();
+    if(saved && saved.length===allIcons.length){
+      applyPositions(saved,true);
+    } else {
+      var pos=defaultPositions();
+      applyPositions(pos,true);
+      savePositions(pos);
+    }
+    initTrash();
+    initFolders();
+    // Restore wallpaper
+    try{
+      var savedWP=storageGet(WALLPAPER_KEY);
+      if(savedWP){
+        document.body.className=savedWP;
+        document.querySelectorAll('.wps').forEach(function(s){s.classList.remove('on')});
+        var wpMap={'':'wps-a','wp-aurora':'wps-b','wp-sunset':'wps-c','wp-ocean':'wps-d','wp-forest':'wps-e','wp-light':'wps-f','wp-rose':'wps-g','wp-midnight':'wps-h','wp-warmgray':'wps-i','wp-peach':'wps-j'};
+        var targetCls=wpMap[savedWP];
+        if(targetCls){var t=document.querySelector('.'+targetCls);if(t)t.classList.add('on')}
+      }
+    }catch(e){}
+    // Init icon sizer
+    var savedScale=getIconScale();
+    var sizer=document.getElementById('iconSizer');
+    if(sizer){sizer.value=savedScale;if(savedScale!==1)applyIconScale(savedScale);}
+    if(sizer)sizer.addEventListener('input',function(){applyIconScale(parseFloat(this.value))});
+    setTimeout(function(){showTip()},1200);
+    setTimeout(function(){b.style.display='none'},1000);
+  });
+},2000);
+
+// === Clock ===
+function tick(){
+  var d=new Date();
+  var dateText=d.toLocaleDateString(APP_LOCALE||'ko',{month:'numeric',day:'numeric',weekday:'short'});
+  var timeText=d.toLocaleTimeString(APP_LOCALE||'ko',{hour:'numeric',minute:'2-digit'});
+  document.getElementById('clk').textContent=dateText+' '+timeText;
+}
+tick();setInterval(tick,30000);
+
+// === Wallpaper ===
+var wpOpen=false;
+function setWP(c,el){
+  document.body.className=c;
+  document.querySelectorAll('.wps').forEach(function(s){s.classList.remove('on')});
+  if(el)el.classList.add('on');
+  storageSet(WALLPAPER_KEY,c);
+}
+function toggleWP(){wpOpen=!wpOpen;document.getElementById('wpp').classList.toggle('on',wpOpen)}
+
+// === Spotlight ===
+var si=0;
+function openSP(){document.getElementById('sp').classList.add('on');var inp=document.getElementById('spInp');inp.value='';inp.focus();renderSP('')}
+function closeSP(){document.getElementById('sp').classList.remove('on')}
+document.getElementById('spInp').addEventListener('input',function(){si=0;renderSP(this.value)});
+function renderSP(q){
+  var r=document.getElementById('spList'),f=items;
+  if(q){var l=q.toLowerCase();f=items.filter(function(i){return i.n.toLowerCase().indexOf(l)>=0||i.c.toLowerCase().indexOf(l)>=0})}
+  var h='';f.forEach(function(i,x){
+    h+='<a class="spot-r'+(x===si?' sel':'')+'" href="'+i.h+'"><div class="spot-r-icon '+i.bg+'">'+i.icon+'</div><div><div class="spot-r-name">'+i.n+'</div><div class="spot-r-cat">'+i.c+'</div></div></a>';
+  });
+  if(!f.length)h='<div class="spot-hint">'+I18N.ui_spot_empty+'</div>';
+  r.innerHTML=h;
+}
+document.addEventListener('keydown',function(e){
+  if((e.metaKey||e.ctrlKey)&&e.key==='k'){e.preventDefault();document.getElementById('sp').classList.contains('on')?closeSP():openSP();return}
+  if(e.key==='Escape'){closeSP();closeTrash();closeFolderWin();document.getElementById('wpp').classList.remove('on');document.getElementById('ctx').classList.remove('on');document.getElementById('mcBub').classList.remove('on');wpOpen=false;return}
+  if(!document.getElementById('sp').classList.contains('on'))return;
+  var its=document.querySelectorAll('.spot-r');
+  if(e.key==='ArrowDown'){e.preventDefault();si=Math.min(si+1,its.length-1);its.forEach(function(el,i){el.classList.toggle('sel',i===si)});if(its[si])its[si].scrollIntoView({block:'nearest'})}
+  if(e.key==='ArrowUp'){e.preventDefault();si=Math.max(si-1,0);its.forEach(function(el,i){el.classList.toggle('sel',i===si)});if(its[si])its[si].scrollIntoView({block:'nearest'})}
+  if(e.key==='Enter'){e.preventDefault();if(its[si])its[si].click()}
+});
+
+// === Mascot ===
+var tips=I18N.tips||I18N_DEFAULT.tips,ti=0;
+function showTip(){ti=Math.floor(Math.random()*tips.length);document.getElementById('tipTxt').textContent=tips[ti];document.getElementById('mcBub').classList.add('on');setTimeout(function(){document.getElementById('mcBub').classList.remove('on')},5000)}
+function toggleTip(){var b=document.getElementById('mcBub');if(b.classList.contains('on')){b.classList.remove('on')}else{ti=(ti+1)%tips.length;document.getElementById('tipTxt').textContent=tips[ti];b.classList.add('on')}}
+setInterval(function(){if(!document.getElementById('mcBub').classList.contains('on'))showTip()},25000);
+
+// === Folder System ===
+var folderEls=[]; // DOM elements for folder icons
+var openFolderId=null; // currently open folder id
+var folderNavStack=[]; // navigation stack for nested folders: [{folderId, subPath:[]}]
+var currentSubPath=[]; // path of subfolder indices within a folder
+
+function loadFolders(){
+  try{var s=storageGet(FOLDER_KEY);if(s)return JSON.parse(s)}catch(e){}
+  return [];
+}
+function saveFolders(f){
+  storageSet(FOLDER_KEY,JSON.stringify(f));
+}
+
+function createFolder(){
+  var folders=loadFolders();
+  var id='folder-'+Date.now();
+  var g=calcGrid();
+  // Find an empty grid spot
+  var occupied={};
+  allIcons.forEach(function(el){
+    if(el.style.display!=='none'){
+      var key=Math.round((parseInt(el.style.left)||0)/GRID_W)+','+Math.round((parseInt(el.style.top)||0)/GRID_H);
+      occupied[key]=true;
+    }
+  });
+  folderEls.forEach(function(el){
+    var key=Math.round((parseInt(el.style.left)||0)/GRID_W)+','+Math.round((parseInt(el.style.top)||0)/GRID_H);
+    occupied[key]=true;
+  });
+  var fx=PAD_X,fy=PAD_Y;
+  for(var c=0;c<g.cols;c++){
+    for(var r=0;r<g.rows;r++){
+      var key=c+','+r;
+      if(!occupied[key]){fx=PAD_X+c*GRID_W;fy=PAD_Y+r*GRID_H;c=g.cols;break;}
+    }
+  }
+  folders.push({id:id,name:I18N.ui_folder_new_name,items:[],x:fx,y:fy});
+  saveFolders(folders);
+  renderFolderIcon(folders[folders.length-1]);
+}
+
+function renderFolderIcon(f){
+  var dt=document.getElementById('dt');
+  var el=document.createElement('div');
+  el.className='di folder';
+  el.dataset.folderId=f.id;
+  el.style.position='absolute';
+  el.style.left=f.x+'px';
+  el.style.top=f.y+'px';
+  el.innerHTML='<div class="di-img bg-blue">📁'+(f.items.length?'<span class="folder-count">'+f.items.length+'</span>':'')+'</div><div class="di-lbl">'+f.name+'</div>';
+  dt.appendChild(el);
+  folderEls.push(el);
+  // Double click to open
+  el.addEventListener('dblclick',function(e){
+    e.preventDefault();e.stopPropagation();
+    openFolderWin(f.id);
+  });
+}
+
+// Get current subfolder data from path
+function getSubFolderByPath(f, path){
+  var current=f;
+  for(var i=0;i<path.length;i++){
+    if(!current.subfolders||!current.subfolders[path[i]])return null;
+    current=current.subfolders[path[i]];
+  }
+  return current;
+}
+
+function openFolderWin(fid, subPath){
+  var folders=loadFolders();
+  var f=folders.find(function(x){return x.id===fid});
+  if(!f)return;
+  openFolderId=fid;
+  currentSubPath=subPath||[];
+  // Ensure subfolders array exists
+  if(!f.subfolders)f.subfolders=[];
+
+  var win=document.getElementById('folderWin');
+  var nameInp=document.getElementById('folderWinName');
+  var body=document.getElementById('folderWinBody');
+  var backBtn=document.getElementById('folderBackBtn');
+  var bc=document.getElementById('folderBreadcrumb');
+
+  // Get current level data
+  var currentLevel=f;
+  if(currentSubPath.length>0){
+    currentLevel=getSubFolderByPath(f, currentSubPath);
+    if(!currentLevel){currentSubPath=[];currentLevel=f;}
+  }
+
+  nameInp.value=currentLevel.name||f.name;
+  // Show/hide back button
+  backBtn.style.display=currentSubPath.length>0?'flex':'none';
+
+  // Breadcrumb
+  if(currentSubPath.length>0){
+    bc.innerHTML='';
+    bc.classList.add('on');
+    // Root folder
+    var rootSpan=document.createElement('span');
+    rootSpan.textContent=f.name;
+    rootSpan.addEventListener('click',function(){openFolderWin(fid,[])});
+    bc.appendChild(rootSpan);
+    // Path items
+    var buildPath=[];
+    for(var pi=0;pi<currentSubPath.length;pi++){
+      var sep=document.createElement('span');sep.className='bc-sep';sep.textContent='›';bc.appendChild(sep);
+      buildPath.push(currentSubPath[pi]);
+      var pathSpan=document.createElement('span');
+      var subf=getSubFolderByPath(f, buildPath.slice());
+      pathSpan.textContent=subf?subf.name:'?';
+      if(pi<currentSubPath.length-1){
+        pathSpan.addEventListener('click',(function(p){return function(){openFolderWin(fid,p)}})(buildPath.slice()));
+      } else {
+        pathSpan.className='bc-current';
+      }
+      bc.appendChild(pathSpan);
+    }
+  } else {
+    bc.classList.remove('on');
+    bc.innerHTML='';
+  }
+
+  // Name change handler
+  nameInp.onchange=function(){
+    var folders2=loadFolders();
+    var f2=folders2.find(function(x){return x.id===fid});
+    if(!f2)return;
+    if(currentSubPath.length===0){
+      f2.name=nameInp.value;
+      saveFolders(folders2);
+      updateFolderLabel(fid,nameInp.value);
+    } else {
+      var sub=getSubFolderByPath(f2, currentSubPath);
+      if(sub){sub.name=nameInp.value;saveFolders(folders2);}
+    }
+  };
+
+  // Get items for current level
+  var currentItems=currentLevel.items||[];
+  var currentSubs=currentLevel.subfolders||[];
+
+  body.innerHTML='';
+  if(!currentItems.length&&!currentSubs.length){
+    body.innerHTML='<div class="folder-win-empty">'+I18N.ui_folder_empty+'</div>';
+  } else {
+    // Render subfolders first
+    currentSubs.forEach(function(sub,si){
+      var subEl=document.createElement('div');
+      subEl.className='di subfolder';
+      subEl.innerHTML='<div class="di-img bg-blue" style="background:linear-gradient(135deg,#3b82f6,#1d4ed8)">📁'+((sub.items&&sub.items.length)||(sub.subfolders&&sub.subfolders.length)?'<span class="folder-count">'+((sub.items?sub.items.length:0)+(sub.subfolders?sub.subfolders.length:0))+'</span>':'')+'</div><div class="di-lbl">'+sub.name+'</div>';
+      // Actions
+      var actions=document.createElement('div');
+      actions.className='folder-item-actions';
+      var openSubBtn=document.createElement('button');
+      openSubBtn.className='folder-item-btn';
+      openSubBtn.textContent=I18N.ui_action_open;
+      openSubBtn.addEventListener('click',(function(idx){return function(e){
+        e.preventDefault();e.stopPropagation();
+        openFolderWin(fid, currentSubPath.concat([idx]));
+      }})(si));
+      var delSubBtn=document.createElement('button');
+      delSubBtn.className='folder-item-btn del';
+      delSubBtn.textContent=I18N.ui_action_delete;
+      delSubBtn.addEventListener('click',(function(idx){return function(e){
+        e.preventDefault();e.stopPropagation();
+        if(!confirm(tr('msg_confirm_delete_subfolder',{name:currentSubs[idx].name})))return;
+        var folders3=loadFolders();
+        var f3=folders3.find(function(x){return x.id===fid});
+        if(!f3)return;
+        var lvl=currentSubPath.length===0?f3:getSubFolderByPath(f3,currentSubPath);
+        if(!lvl||!lvl.subfolders)return;
+        // Move subfolder's items back to parent
+        var removed=lvl.subfolders[idx];
+        if(removed&&removed.items){
+          removed.items.forEach(function(iconIdx){
+            lvl.items=lvl.items||[];
+            lvl.items.push(iconIdx);
+          });
+        }
+        lvl.subfolders.splice(idx,1);
+        saveFolders(folders3);
+        openFolderWin(fid, currentSubPath);
+      }})(si));
+      actions.appendChild(openSubBtn);
+      actions.appendChild(delSubBtn);
+      subEl.appendChild(actions);
+      // Double click to enter
+      subEl.addEventListener('dblclick',(function(idx){return function(e){
+        e.preventDefault();e.stopPropagation();
+        openFolderWin(fid, currentSubPath.concat([idx]));
+      }})(si));
+      body.appendChild(subEl);
+    });
+
+    // Render icons
+    currentItems.forEach(function(idx){
+      var orig=allIcons[idx];
+      if(!orig)return;
+      var clone=document.createElement('div');
+      clone.className='di';
+      clone.dataset.origIdx=idx;
+      var imgEl=orig.querySelector('.di-img');
+      var lblEl=orig.querySelector('.di-lbl');
+      clone.innerHTML='<div class="di-img '+Array.from(imgEl.classList).filter(function(c){return c!=='di-img'}).join(' ')+'" style="'+(imgEl.getAttribute('style')||'')+'">'+imgEl.innerHTML+'</div><div class="di-lbl">'+lblEl.textContent+'</div>';
+      var actions=document.createElement('div');
+      actions.className='folder-item-actions';
+      var openBtn=document.createElement('button');
+      openBtn.className='folder-item-btn';
+      openBtn.textContent=I18N.ui_action_open;
+      openBtn.addEventListener('click',function(e){
+        e.preventDefault();e.stopPropagation();
+        if(orig.href)window.location.href=orig.href;
+      });
+      var outBtn=document.createElement('button');
+      outBtn.className='folder-item-btn';
+      outBtn.textContent=I18N.ui_action_remove;
+      outBtn.addEventListener('click',function(e){
+        e.preventDefault();e.stopPropagation();
+        removeFromFolderLevel(fid,currentSubPath,idx);
+      });
+      var delBtn=document.createElement('button');
+      delBtn.className='folder-item-btn del';
+      delBtn.textContent=I18N.ui_action_delete;
+      delBtn.addEventListener('click',function(e){
+        e.preventDefault();e.stopPropagation();
+        deleteIconFromFolderLevel(fid,currentSubPath,idx);
+      });
+      actions.appendChild(openBtn);
+      actions.appendChild(outBtn);
+      actions.appendChild(delBtn);
+      clone.appendChild(actions);
+      body.appendChild(clone);
+    });
+  }
+  // Position window center-ish (only on first open)
+  if(!win.classList.contains('on')){
+    win.style.left=Math.max(40,Math.min(innerWidth/2-170,innerWidth-380))+'px';
+    win.style.top=Math.max(60,innerHeight/4)+'px';
+  }
+  win.classList.add('on');
+}
+
+function closeFolderWin(){
+  document.getElementById('folderWin').classList.remove('on');
+  openFolderId=null;
+  currentSubPath=[];
+  document.getElementById('folderBreadcrumb').classList.remove('on');
+}
+
+function navigateFolderBack(){
+  if(!openFolderId)return;
+  if(currentSubPath.length>0){
+    currentSubPath.pop();
+    openFolderWin(openFolderId, currentSubPath);
+  }
+}
+
+function addSubFolder(){
+  if(!openFolderId)return;
+  var folders=loadFolders();
+  var f=folders.find(function(x){return x.id===openFolderId});
+  if(!f)return;
+  var lvl=currentSubPath.length===0?f:getSubFolderByPath(f,currentSubPath);
+  if(!lvl)return;
+  if(!lvl.subfolders)lvl.subfolders=[];
+  lvl.subfolders.push({name:I18N.ui_subfolder_new_name,items:[],subfolders:[]});
+  saveFolders(folders);
+  openFolderWin(openFolderId, currentSubPath);
+}
+
+// Remove icon from a specific folder level
+function removeFromFolderLevel(fid, path, iconIdx){
+  var folders=loadFolders();
+  var f=folders.find(function(x){return x.id===fid});
+  if(!f)return;
+  var lvl=path.length===0?f:getSubFolderByPath(f,path);
+  if(!lvl)return;
+  lvl.items=lvl.items.filter(function(i){return i!==iconIdx});
+  saveFolders(folders);
+  allIcons[iconIdx].style.display='';
+  var folderEl=folderEls.find(function(el){return el.dataset.folderId===fid});
+  var fx=folderEl?parseInt(folderEl.style.left)||0:PAD_X;
+  var fy=folderEl?parseInt(folderEl.style.top)||0:PAD_Y;
+  var snapped=snapToGrid(fx+GRID_W,fy);
+  allIcons[iconIdx].style.left=snapped.x+'px';
+  allIcons[iconIdx].style.top=snapped.y+'px';
+  updateFolderCount(fid);
+  saveHiddenIcons();
+  var pos=[];
+  allIcons.forEach(function(el){
+    pos.push({x:parseInt(el.style.left)||0,y:parseInt(el.style.top)||0});
+  });
+  savePositions(pos);
+  openFolderWin(fid, path);
+}
+
+// Delete icon from a specific folder level (to trash)
+function deleteIconFromFolderLevel(fid, path, iconIdx){
+  var folders=loadFolders();
+  var f=folders.find(function(x){return x.id===fid});
+  if(!f)return;
+  var lvl=path.length===0?f:getSubFolderByPath(f,path);
+  if(!lvl)return;
+  lvl.items=lvl.items.filter(function(i){return i!==iconIdx});
+  saveFolders(folders);
+  moveToTrash(iconIdx);
+  updateFolderCount(fid);
+  openFolderWin(fid, path);
+}
+
+function updateFolderLabel(fid,name){
+  folderEls.forEach(function(el){
+    if(el.dataset.folderId===fid){
+      el.querySelector('.di-lbl').textContent=name;
+    }
+  });
+}
+
+function countAllFolderItems(f){
+  var total=(f.items?f.items.length:0)+(f.subfolders?f.subfolders.length:0);
+  if(f.subfolders){f.subfolders.forEach(function(sf){total+=countAllFolderItems(sf);})}
+  return total;
+}
+
+function updateFolderCount(fid){
+  var folders=loadFolders();
+  var f=folders.find(function(x){return x.id===fid});
+  if(!f)return;
+  var total=(f.items?f.items.length:0)+(f.subfolders?f.subfolders.length:0);
+  folderEls.forEach(function(el){
+    if(el.dataset.folderId===fid){
+      var countEl=el.querySelector('.folder-count');
+      if(total){
+        if(!countEl){
+          countEl=document.createElement('span');
+          countEl.className='folder-count';
+          el.querySelector('.di-img').appendChild(countEl);
+        }
+        countEl.textContent=total;
+      } else if(countEl){
+        countEl.remove();
+      }
+    }
+  });
+}
+
+function addToFolder(fid,iconIdx){
+  var folders=loadFolders();
+  var f=folders.find(function(x){return x.id===fid});
+  if(!f)return;
+  if(f.items.indexOf(iconIdx)>=0)return; // already in
+  f.items.push(iconIdx);
+  saveFolders(folders);
+  // Hide the icon on desktop
+  allIcons[iconIdx].style.display='none';
+  updateFolderCount(fid);
+  // Save hidden state
+  saveHiddenIcons();
+}
+
+function removeFromFolder(fid,iconIdx){
+  var folders=loadFolders();
+  var f=folders.find(function(x){return x.id===fid});
+  if(!f)return;
+  f.items=f.items.filter(function(i){return i!==iconIdx});
+  saveFolders(folders);
+  // Show the icon back on desktop, place near the folder
+  var folderEl=folderEls.find(function(el){return el.dataset.folderId===fid});
+  var fx=folderEl?parseInt(folderEl.style.left)||0:PAD_X;
+  var fy=folderEl?parseInt(folderEl.style.top)||0:PAD_Y;
+  var snapped=snapToGrid(fx+GRID_W,fy);
+  allIcons[iconIdx].style.display='';
+  allIcons[iconIdx].style.left=snapped.x+'px';
+  allIcons[iconIdx].style.top=snapped.y+'px';
+  updateFolderCount(fid);
+  saveHiddenIcons();
+  // Save positions
+  var pos=[];
+  allIcons.forEach(function(el){
+    pos.push({x:parseInt(el.style.left)||0,y:parseInt(el.style.top)||0});
+  });
+  savePositions(pos);
+  // Refresh folder window
+  openFolderWin(fid);
+}
+
+function saveHiddenIcons(){
+  var hidden=[];
+  allIcons.forEach(function(el,i){if(el.style.display==='none')hidden.push(i)});
+  storageSet(HIDDEN_KEY,JSON.stringify(hidden));
+}
+function loadHiddenIcons(){
+  try{var s=storageGet(HIDDEN_KEY);if(s)return JSON.parse(s)}catch(e){}
+  return [];
+}
+
+// Detect folder drop target during drag
+function getFolderAtPoint(x,y){
+  for(var i=0;i<folderEls.length;i++){
+    var r=folderEls[i].getBoundingClientRect();
+    if(x>=r.left&&x<=r.right&&y>=r.top&&y<=r.bottom){
+      return folderEls[i];
+    }
+  }
+  return null;
+}
+
+// Folder drag support (make folders draggable too)
+var folderDragEl=null,folderDragStartX=0,folderDragStartY=0,folderDragOrigX=0,folderDragOrigY=0,folderDragged=false;
+
+function onFolderPointerDown(e){
+  var fEl=e.target.closest('.di.folder');
+  if(!fEl||e.button!==0)return;
+  e.preventDefault();e.stopPropagation();
+  folderDragEl=fEl;
+  folderDragged=false;
+  folderDragStartX=e.clientX;
+  folderDragStartY=e.clientY;
+  folderDragOrigX=parseInt(fEl.style.left)||0;
+  folderDragOrigY=parseInt(fEl.style.top)||0;
+}
+
+// Integrate into existing pointer handlers
+var origOnPointerDown=onPointerDown;
+onPointerDown=function(e){
+  if(e.target.closest('.di.folder')){onFolderPointerDown(e);return}
+  origOnPointerDown(e);
+};
+
+var origOnPointerMove=onPointerMove;
+onPointerMove=function(e){
+  if(folderDragEl){
+    var dx=e.clientX-folderDragStartX,dy=e.clientY-folderDragStartY;
+    if(!folderDragged&&Math.abs(dx)+Math.abs(dy)<DRAG_THRESHOLD)return;
+    folderDragged=true;
+    folderDragEl.classList.add('dragging');
+    var dt=document.getElementById('dt');
+    folderDragEl.style.left=Math.max(0,Math.min(folderDragOrigX+dx,dt.offsetWidth-76))+'px';
+    folderDragEl.style.top=Math.max(0,Math.min(folderDragOrigY+dy,dt.offsetHeight-96))+'px';
+    return;
+  }
+  // Highlight folder drop target when dragging regular icon
+  if(dragEl){
+    folderEls.forEach(function(f){f.classList.remove('drop-target')});
+    var target=getFolderAtPoint(e.clientX,e.clientY);
+    if(target)target.classList.add('drop-target');
+  }
+  origOnPointerMove(e);
+};
+
+var origOnPointerUp=onPointerUp;
+onPointerUp=function(e){
+  // Folder drag end
+  if(folderDragEl){
+    folderDragEl.classList.remove('dragging');
+    if(folderDragged){
+      var snapped=snapToGrid(parseInt(folderDragEl.style.left)||0,parseInt(folderDragEl.style.top)||0);
+      folderDragEl.style.left=snapped.x+'px';
+      folderDragEl.style.top=snapped.y+'px';
+      // Save folder positions
+      var folders=loadFolders();
+      var fid=folderDragEl.dataset.folderId;
+      var f=folders.find(function(x){return x.id===fid});
+      if(f){f.x=snapped.x;f.y=snapped.y;saveFolders(folders)}
+    } else {
+      // Click on folder = open it
+      openFolderWin(folderDragEl.dataset.folderId);
+    }
+    folderDragEl=null;folderDragged=false;
+    return;
+  }
+  // Check if regular icon was dropped on a folder
+  if(dragEl&&dragged){
+    folderEls.forEach(function(f){f.classList.remove('drop-target')});
+    var target=getFolderAtPoint(e.clientX,e.clientY);
+    if(target){
+      var idx=parseInt(dragEl.dataset.idx);
+      addToFolder(target.dataset.folderId,idx);
+      dragEl.classList.remove('dragging');
+      dragEl=null;dragged=false;
+      return;
+    }
+  }
+  origOnPointerUp(e);
+};
+
+// Override the handlers
+document.getElementById('dt').removeEventListener('pointerdown',origOnPointerDown);
+document.getElementById('dt').addEventListener('pointerdown',onPointerDown);
+document.removeEventListener('pointermove',origOnPointerMove);
+document.addEventListener('pointermove',onPointerMove);
+document.removeEventListener('pointerup',origOnPointerUp);
+document.addEventListener('pointerup',onPointerUp);
+
+// Make folder window draggable
+var fwDrag=false,fwStartX=0,fwStartY=0,fwOrigL=0,fwOrigT=0;
+document.getElementById('folderWinBar').addEventListener('pointerdown',function(e){
+  fwDrag=true;fwStartX=e.clientX;fwStartY=e.clientY;
+  var win=document.getElementById('folderWin');
+  fwOrigL=parseInt(win.style.left)||0;fwOrigT=parseInt(win.style.top)||0;
+});
+document.addEventListener('pointermove',function(e){
+  if(!fwDrag)return;
+  var win=document.getElementById('folderWin');
+  win.style.left=(fwOrigL+e.clientX-fwStartX)+'px';
+  win.style.top=(fwOrigT+e.clientY-fwStartY)+'px';
+});
+document.addEventListener('pointerup',function(){fwDrag=false});
+
+// Folder context menu
+var folderCtxTarget=null;
+function showFolderCtx(e,fEl){
+  e.preventDefault();e.stopPropagation();
+  folderCtxTarget=fEl;
+  var ctx=document.getElementById('folderCtx');
+  ctx.style.left=Math.min(e.clientX,innerWidth-160)+'px';
+  ctx.style.top=Math.min(e.clientY,innerHeight-120)+'px';
+  ctx.classList.add('on');
+}
+function hideFolderCtx(){
+  document.getElementById('folderCtx').classList.remove('on');
+  folderCtxTarget=null;
+}
+document.getElementById('folderCtxOpen').addEventListener('click',function(){
+  if(folderCtxTarget)openFolderWin(folderCtxTarget.dataset.folderId);
+  hideFolderCtx();
+});
+document.getElementById('folderCtxRename').addEventListener('click',function(){
+  if(!folderCtxTarget)return;
+  var fid=folderCtxTarget.dataset.folderId;
+  var folders=loadFolders();
+  var f=folders.find(function(x){return x.id===fid});
+  if(!f)return;
+  var newName=prompt(I18N.msg_prompt_folder_name,f.name);
+  if(newName&&newName.trim()){
+    f.name=newName.trim();
+    saveFolders(folders);
+    updateFolderLabel(fid,f.name);
+  }
+  hideFolderCtx();
+});
+document.getElementById('folderCtxDelete').addEventListener('click',function(){
+  if(!folderCtxTarget)return;
+  var fid=folderCtxTarget.dataset.folderId;
+  var fEl=folderCtxTarget;
+  var folders=loadFolders();
+  var f=folders.find(function(x){return x.id===fid});
+  if(!f){hideFolderCtx();return;}
+  // Move folder to trash (items stay inside the folder in trash)
+  moveFolderToTrash(f, fEl);
+  closeFolderWin();
+  hideFolderCtx();
+});
+document.addEventListener('contextmenu',function(e){
+  var fEl=e.target.closest('.di.folder');
+  if(fEl){showFolderCtx(e,fEl);return}
+});
+document.addEventListener('click',function(e){
+  if(!e.target.closest('#folderCtx'))hideFolderCtx();
+});
+
+// === Trash System ===
+function loadTrash(){
+  try{var s=storageGet(TRASH_KEY);if(s)return JSON.parse(s)}catch(e){}
+  return []; // array of {idx, name, deletedAt}
+}
+function saveTrash(t){
+  storageSet(TRASH_KEY,JSON.stringify(t));
+}
+
+function updateTrashBadge(){
+  var trash=loadTrash();
+  var badge=document.getElementById('trashBadge');
+  if(trash.length){
+    badge.textContent=trash.length;
+    badge.classList.add('on');
+  } else {
+    badge.classList.remove('on');
+  }
+}
+
+function moveToTrash(iconIdx){
+  var trash=loadTrash();
+  // Don't add duplicates
+  if(trash.some(function(t){return t.type!=='folder'&&t.idx===iconIdx}))return;
+  var name=allIcons[iconIdx].dataset.n||allIcons[iconIdx].querySelector('.di-lbl').textContent;
+  trash.push({type:'icon', idx:iconIdx, name:name, deletedAt:new Date().toLocaleString(APP_LOCALE||'ko')});
+  saveTrash(trash);
+  allIcons[iconIdx].style.display='none';
+  // Also remove from any folder
+  var folders=loadFolders();
+  folders.forEach(function(f){
+    f.items=f.items.filter(function(i){return i!==iconIdx});
+  });
+  saveFolders(folders);
+  saveHiddenIcons();
+  folderEls.forEach(function(el){updateFolderCount(el.dataset.folderId)});
+  updateTrashBadge();
+}
+
+function moveFolderToTrash(folderData, folderEl){
+  var trash=loadTrash();
+  // Don't add duplicates
+  if(trash.some(function(t){return t.type==='folder'&&t.folderId===folderData.id}))return;
+  // Hide icons inside the folder too
+  if(folderData.items&&folderData.items.length){
+    folderData.items.forEach(function(idx){
+      if(allIcons[idx])allIcons[idx].style.display='none';
+    });
+    saveHiddenIcons();
+  }
+  trash.push({
+    type:'folder',
+    folderId:folderData.id,
+    name:folderData.name,
+    items:folderData.items||[],
+    x:parseInt(folderEl.style.left)||0,
+    y:parseInt(folderEl.style.top)||0,
+    deletedAt:new Date().toLocaleString(APP_LOCALE||'ko')
+  });
+  saveTrash(trash);
+  // Remove folder from folders list and DOM
+  var folders=loadFolders();
+  folders=folders.filter(function(x){return x.id!==folderData.id});
+  saveFolders(folders);
+  folderEl.remove();
+  folderEls=folderEls.filter(function(x){return x!==folderEl});
+  updateTrashBadge();
+}
+
+function deleteIcon(iconIdx){
+  moveToTrash(iconIdx);
+}
+
+function deleteIconFromFolder(fid,iconIdx){
+  var folders=loadFolders();
+  var f=folders.find(function(x){return x.id===fid});
+  if(f){
+    f.items=f.items.filter(function(i){return i!==iconIdx});
+    saveFolders(folders);
+  }
+  moveToTrash(iconIdx);
+  updateFolderCount(fid);
+  openFolderWin(fid);
+}
+
+function restoreFromTrash(iconIdx){
+  var trash=loadTrash();
+  trash=trash.filter(function(t){return !(t.type!=='folder'&&t.idx===iconIdx)});
+  saveTrash(trash);
+  allIcons[iconIdx].style.display='';
+  // Place near center of desktop
+  var g=calcGrid();
+  var snapped=snapToGrid(PAD_X+Math.floor(g.cols/2)*GRID_W, PAD_Y);
+  allIcons[iconIdx].style.left=snapped.x+'px';
+  allIcons[iconIdx].style.top=snapped.y+'px';
+  saveHiddenIcons();
+  var pos=[];
+  allIcons.forEach(function(el){
+    pos.push({x:parseInt(el.style.left)||0,y:parseInt(el.style.top)||0});
+  });
+  savePositions(pos);
+  updateTrashBadge();
+  openTrash(); // refresh
+}
+
+function restoreFolderFromTrash(folderId){
+  var trash=loadTrash();
+  var trashItem=null;
+  trash=trash.filter(function(t){
+    if(t.type==='folder'&&t.folderId===folderId){trashItem=t;return false;}
+    return true;
+  });
+  if(!trashItem)return;
+  saveTrash(trash);
+  // Re-add folder to folders list
+  var folders=loadFolders();
+  folders.push({id:trashItem.folderId, name:trashItem.name, items:trashItem.items, x:trashItem.x, y:trashItem.y});
+  saveFolders(folders);
+  // Re-render the folder icon on desktop
+  renderFolderIcon(folders[folders.length-1]);
+  // Show icons that belong to this folder (they stay hidden inside the folder)
+  if(trashItem.items&&trashItem.items.length){
+    trashItem.items.forEach(function(idx){
+      if(allIcons[idx])allIcons[idx].style.display='none'; // keep hidden, they're in folder
+    });
+    saveHiddenIcons();
+  }
+  updateTrashBadge();
+  openTrash(); // refresh
+}
+
+function restoreAllFromTrash(){
+  var trash=loadTrash();
+  if(!trash.length)return;
+  if(!confirm(tr('msg_confirm_restore_all',{count:trash.length})))return;
+  trash.forEach(function(t){
+    if(t.type==='folder'){
+      // Restore folder
+      var folders=loadFolders();
+      folders.push({id:t.folderId, name:t.name, items:t.items, x:t.x, y:t.y});
+      saveFolders(folders);
+      renderFolderIcon(folders[folders.length-1]);
+      // Keep folder items hidden (they're inside the folder)
+      if(t.items&&t.items.length){
+        t.items.forEach(function(idx){if(allIcons[idx])allIcons[idx].style.display='none'});
+      }
+    } else {
+      if(allIcons[t.idx])allIcons[t.idx].style.display='';
+    }
+  });
+  saveTrash([]);
+  saveHiddenIcons();
+  updateTrashBadge();
+  resetPositions();
+  closeTrash();
+}
+
+function emptyTrash(){
+  var trash=loadTrash();
+  if(!trash.length)return;
+  if(!confirm(tr('msg_confirm_empty_trash',{count:trash.length})))return;
+  // For folders: their contained icons stay hidden permanently
+  // For icons: they stay hidden permanently
+  // Clear trash list
+  saveTrash([]);
+  updateTrashBadge();
+  openTrash(); // refresh
+}
+
+function openTrash(){
+  var trash=loadTrash();
+  var win=document.getElementById('trashWin');
+  var body=document.getElementById('trashWinBody');
+  var info=document.getElementById('trashInfo');
+  body.innerHTML='';
+  info.textContent=tr('ui_trash_count',{count:trash.length});
+  if(!trash.length){
+    body.innerHTML='<div class="trash-win-empty">'+I18N.ui_trash_empty+'</div>';
+  } else {
+    trash.forEach(function(t){
+      // Backward compatibility: old items without type are icons
+      var itemType=(t.type==='folder')?'folder':'icon';
+      var item=document.createElement('div');
+      if(itemType==='folder'){
+        // Render folder item in trash
+        item.className='di folder';
+        item.style.position='relative';
+        item.innerHTML='<div class="di-img bg-blue" style="background:linear-gradient(135deg,#3b82f6,#1d4ed8)">📁'+(t.items&&t.items.length?'<span class="folder-count">'+t.items.length+'</span>':'')+'</div><div class="di-lbl">'+t.name+'</div>';
+        var actions=document.createElement('div');
+        actions.className='trash-item-actions folder-item-actions';
+        var restoreBtn=document.createElement('button');
+        restoreBtn.className='folder-item-btn';
+        restoreBtn.textContent=I18N.ui_action_restore;
+        restoreBtn.addEventListener('click',(function(fid){return function(e){
+          e.preventDefault();e.stopPropagation();
+          restoreFolderFromTrash(fid);
+        }})(t.folderId));
+        var dateSpan=document.createElement('span');
+        dateSpan.style.cssText='font-size:.42rem;color:rgba(255,255,255,.25);align-self:center';
+        dateSpan.textContent=t.deletedAt;
+        actions.appendChild(restoreBtn);
+        actions.appendChild(dateSpan);
+        item.appendChild(actions);
+        body.appendChild(item);
+      } else {
+        var iconIdx=t.idx;
+        if(iconIdx===undefined||iconIdx===null||!allIcons[iconIdx])return;
+        var orig=allIcons[iconIdx];
+        item.className='di';
+        var imgEl=orig.querySelector('.di-img');
+        var lblEl=orig.querySelector('.di-lbl');
+        if(!imgEl||!lblEl)return;
+        item.innerHTML='<div class="di-img '+Array.from(imgEl.classList).filter(function(c){return c!=='di-img'}).join(' ')+'" style="'+(imgEl.getAttribute('style')||'')+'">'+imgEl.innerHTML+'</div><div class="di-lbl">'+lblEl.textContent+'</div>';
+        var actions=document.createElement('div');
+        actions.className='trash-item-actions folder-item-actions';
+        var restoreBtn=document.createElement('button');
+        restoreBtn.className='folder-item-btn';
+        restoreBtn.textContent=I18N.ui_action_restore;
+        restoreBtn.addEventListener('click',(function(idx){return function(e){
+          e.preventDefault();e.stopPropagation();
+          restoreFromTrash(idx);
+        }})(iconIdx));
+        var dateSpan=document.createElement('span');
+        dateSpan.style.cssText='font-size:.42rem;color:rgba(255,255,255,.25);align-self:center';
+        dateSpan.textContent=t.deletedAt;
+        actions.appendChild(restoreBtn);
+        actions.appendChild(dateSpan);
+        item.appendChild(actions);
+        body.appendChild(item);
+      }
+    });
+  }
+  win.style.left=Math.max(40,Math.min(innerWidth/2-180,innerWidth-400))+'px';
+  win.style.top=Math.max(60,innerHeight/4)+'px';
+  win.classList.add('on');
+}
+
+function closeTrash(){
+  document.getElementById('trashWin').classList.remove('on');
+}
+
+// Trash window buttons
+document.getElementById('trashRestoreAll').addEventListener('click',restoreAllFromTrash);
+document.getElementById('trashEmptyAll').addEventListener('click',emptyTrash);
+
+// Make trash window draggable
+var twDrag=false,twStartX=0,twStartY=0,twOrigL=0,twOrigT=0;
+document.getElementById('trashWinBar').addEventListener('pointerdown',function(e){
+  twDrag=true;twStartX=e.clientX;twStartY=e.clientY;
+  var win=document.getElementById('trashWin');
+  twOrigL=parseInt(win.style.left)||0;twOrigT=parseInt(win.style.top)||0;
+});
+document.addEventListener('pointermove',function(e){
+  if(!twDrag)return;
+  var win=document.getElementById('trashWin');
+  win.style.left=(twOrigL+e.clientX-twStartX)+'px';
+  win.style.top=(twOrigT+e.clientY-twStartY)+'px';
+});
+document.addEventListener('pointerup',function(){twDrag=false});
+
+function initTrash(){
+  var trash=loadTrash();
+  trash.forEach(function(t){
+    if(allIcons[t.idx])allIcons[t.idx].style.display='none';
+  });
+  updateTrashBadge();
+}
+
+// === Icon Context Menu ===
+var iconCtxTarget=null;
+function showIconCtx(e,iconEl){
+  e.preventDefault();e.stopPropagation();
+  iconCtxTarget=iconEl;
+  var ctx=document.getElementById('iconCtx');
+  ctx.style.left=Math.min(e.clientX,innerWidth-160)+'px';
+  ctx.style.top=Math.min(e.clientY,innerHeight-80)+'px';
+  ctx.classList.add('on');
+}
+function hideIconCtx(){
+  document.getElementById('iconCtx').classList.remove('on');
+  iconCtxTarget=null;
+}
+document.getElementById('iconCtxOpen').addEventListener('click',function(){
+  if(iconCtxTarget&&iconCtxTarget.href)window.location.href=iconCtxTarget.href;
+  hideIconCtx();
+});
+document.getElementById('iconCtxDelete').addEventListener('click',function(){
+  if(!iconCtxTarget)return;
+  var idx=parseInt(iconCtxTarget.dataset.idx);
+  deleteIcon(idx);
+  hideIconCtx();
+});
+// Show icon context menu on right-click of desktop icons
+document.addEventListener('contextmenu',function(e){
+  var iconEl=e.target.closest('.di[href]');
+  if(iconEl&&!iconEl.closest('.folder-win')&&!iconEl.classList.contains('folder')){
+    showIconCtx(e,iconEl);
+    return;
+  }
+});
+// Hide icon context menu on click elsewhere
+document.addEventListener('click',function(e){
+  if(!e.target.closest('.icon-ctx'))hideIconCtx();
+});
+
+// Init folders on boot
+function initFolders(){
+  var folders=loadFolders();
+  folders.forEach(function(f){renderFolderIcon(f)});
+  // Hide icons that are in folders
+  var hidden=loadHiddenIcons();
+  hidden.forEach(function(idx){
+    if(allIcons[idx])allIcons[idx].style.display='none';
+  });
+}
+
+// === Context Menu ===
+document.addEventListener('contextmenu',function(e){if(e.target.closest('.di[href]')||e.target.closest('.di.folder')||e.target.closest('.dock')||e.target.closest('.menubar')||e.target.closest('.extbar')||e.target.closest('.spot-bg')||e.target.closest('.folder-win')||e.target.closest('.icon-ctx'))return;e.preventDefault();var c=document.getElementById('ctx');c.style.left=Math.min(e.clientX,innerWidth-180)+'px';c.style.top=Math.min(e.clientY,innerHeight-100)+'px';c.classList.add('on')});
+document.addEventListener('click',function(e){document.getElementById('ctx').classList.remove('on');if(wpOpen&&!e.target.closest('.wpp')&&!e.target.closest('.mb-item')){document.getElementById('wpp').classList.remove('on');wpOpen=false}});
+</script>
+</body>
+</html>
