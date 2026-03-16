@@ -10,7 +10,7 @@
     {
       "name": "ai-dashboard-local",
       "description": "Cross-platform local AI dashboard workflow plugin",
-      "version": "0.1.3",
+      "version": "0.1.4",
       "author": {
         "name": "Ike"
       },
